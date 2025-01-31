@@ -55,10 +55,8 @@ export default function Home() {
         
         <h1 className="text-3xl max-sm:text-xl max-sm:mb-10  font-bold mb-10 text-center ">Recommended Books</h1>
           
-        <div className='grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 bg-gray-200'>
-           
+        <div className='grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4  gap-8 px-10 bg-gray-200'>
 
-      
       {Array.isArray(randomBooks) && randomBooks?.map((book) => (
           <BookCard key={`${book._id}`} data={book} /> 
         ))}
