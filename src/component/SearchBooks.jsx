@@ -50,7 +50,7 @@ const SearchBooks = () => {
   };
 
   return (
-    <div className="absolute top-24 left-60 max-lg:left-40 max-md:left-12 max-sm:left-4 max-sm:w-60 w-xl">
+    <div className="max-md:w-80 max-sm:w-60 w-xl">
     
       <input
         type="text"

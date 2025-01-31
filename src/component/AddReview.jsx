@@ -61,6 +61,7 @@ const AddReview = () => {
         <div className="mb-4">
           <label className="block text-gray-700">Rating:</label>
           <ReactStars
+          formData={formData}
             count={5}
             onChange={handleRatingChange}
             size={30}

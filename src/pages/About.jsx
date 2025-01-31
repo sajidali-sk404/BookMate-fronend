@@ -2,7 +2,7 @@ import React from 'react'
 
 function About() {
   return (
-    <div className='my-16  mx-52'>
+    <div className='my-16  mx-52 max-sm:mx-6'>
     <div>
       <h1 className='text-2xl font-bold'>About BookMate</h1>
         <p className=' p-4'>Welcome to <strong>BookMate</strong>– your ultimate companion in the world of books! At BookMate, we believe that reading has the power to transform lives, expand horizons, and ignite the imagination. Whether you're an avid reader or someone just discovering the joy of books, BookMate is designed to enhance your reading journey.</p>
