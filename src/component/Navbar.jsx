@@ -72,18 +72,7 @@ const Navbar = () => {
             Books
           </Link>
 
-          <Link to="/addbooks" className={
-            activeMenu === "/addbooks"
-              ? "text-gray-400 underline"
-              : "text-white hover:text-gray-400"
-          }
-            onClick={() => {
-              setactiveMenu("/addbooks");
-            }}
-            active={activeMenu}
-          >
-            Add Book
-          </Link>
+          
           {/* Conditionally render Cart, About, and Profile based on login status */}
           {isLoggedIn && (
             <>
@@ -226,18 +215,7 @@ const Navbar = () => {
             >
               Books
             </Link>
-            <Link to="/addbooks" className={
-              activeMenu === "/addbooks"
-                ? "text-gray-400 underline block"
-                : "text-white hover:text-gray-400 block"
-            }
-              onClick={() => {
-                setactiveMenu("/addbooks");
-              }}
-              active={activeMenu}
-            >
-              Add Book
-            </Link>
+            
 
             {/* Conditionally render Cart, About, and Profile in sidebar */}
             {isLoggedIn && (
