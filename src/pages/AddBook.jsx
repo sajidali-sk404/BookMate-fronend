@@ -3,11 +3,17 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function AddBook() {
+    const headers = {
+        id: localStorage.getItem("id"),
+        authorization: `Baerer ${localStorage.getItem("token")}`,
+        role: "admin"
+    }
     const [formData, setFormData] = useState({
         url: '',
         title: '',
         author: '',
         genre: '',
+        price: '',
         desc: '',
         category: 'Fiction',
     });
@@ -26,13 +32,13 @@ function AddBook() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook`, formData);
+            const response = await axios.post(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook`, formData, { headers });
             console.log(response);
-            alert('Book added successfully!');
+            alert('Book added successfully!' || response.data.message);
             navigate(`/books`);
-            setFormData({ url: '', title: '', author: '', genre: '', desc: '' }); // Reset form
+            setFormData({ url: '', title: '', author: '', price: '', genre: '', desc: '' }); // Reset form
         } catch (error) {
-            console.error('Error adding book:', error);
+            console.error('Error adding book:', error.message);
             alert('Failed to add book. Please try again.');
         }
     };
@@ -75,6 +81,19 @@ function AddBook() {
                             id="author"
                             name="author"
                             value={formData.author}
+                            onChange={handleChange}
+                            required
+                            className="w-full p-2 border border-gray-300 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label htmlFor="price" className="block text-gray-700">Price:</label>
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={formData.price}
                             onChange={handleChange}
                             required
                             className="w-full p-2 border border-gray-300 rounded"

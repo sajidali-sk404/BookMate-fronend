@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
-import DeleteBook from './DeleteBook';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { FaShoppingCart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+
 
 
 const BookDetails = () => {
@@ -12,7 +15,12 @@ const BookDetails = () => {
     const [book, setBook] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isFavouriteClicked, setIsFavouriteClicked] = useState();
 
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const role = useSelector((state) => state.auth.role);
+
+       const navigate = useNavigate()
     // Fetch book details
     const fetchBookDetails = async () => {
         try {
@@ -33,6 +41,12 @@ const BookDetails = () => {
         }
     };
 
+    const headers = {
+        id: localStorage.getItem("id"),
+        authorization: `Baerer ${localStorage.getItem("token")}`,
+        bookid: id
+    }
+
     useEffect(() => {
         // Fetch both book details and reviews when the component loads
         const fetchData = async () => {
@@ -43,6 +57,8 @@ const BookDetails = () => {
 
         fetchData();
     }, [id]);
+
+
 
     if (loading) {
         return <div>Loading...</div>;
@@ -63,13 +79,72 @@ const BookDetails = () => {
         }
     };
 
+    const handleDeleteBook = async () => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this book?');
+        if (!confirmDelete) return;
+    
+        try {
+          await axios.delete(`https://bookmate-backend-production-8e5e.up.railway.app/api/deletebook`,{headers});
+          alert('Book deleted successfully!');
+          navigate('/books'); 
+        } catch (error) {
+          console.error('Error deleting book:', error);
+          alert('Failed to delete the book. Please try again.');
+        }
+      };
+
+
+    const handleFavourite = async () => {
+        const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook-to-favourite`, {}, {
+            headers
+        })
+        if (!isFavouriteClicked) {
+            setIsFavouriteClicked(true);
+        }
+        alert(response.data.massage)
+    }
+
+    const handleCart = async () => {
+        const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook-to-cart`, {}, {
+            headers
+        })
+
+        alert(response.data.massage)
+    }
+
+   
 
     return (
         <>
             <div className="max-w-2xl mx-auto mt-3 p-4">
                 {book ? (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <img className='w-52 py-2' src={book.url} alt="" />
+                    <div className=" bg-white p-6 rounded-lg shadow-md">
+                        <div className='max-md:flex-col flex gap-5 justify-center items-center bg-gray-200'>
+                            <img className='w-52 py-2' src={book.url} alt="" />
+                            {isLoggedIn === true && role === "user" && <div className='flex gap-5 mt-5 text-2xl flex-col'>
+                                <button
+                                    onClick={handleFavourite}
+                                    className={`cursor-pointer p-2 rounded ${isFavouriteClicked
+                                        ? 'bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white'
+                                        : 'bg-gray-200'
+                                        }`}
+                                >
+                                    <FaRegHeart />
+                                </button>
+
+                                <button onClick={handleCart} className='cursor-pointer'><FaShoppingCart /></button>
+                            </div>}
+                            {isLoggedIn === true && role === "admin" && <div className='flex gap-5 pb-4 text-xl md:flex-col'>
+                                <Link to={`/books/updatebook/${id}`} className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'><FaEdit /> BOOK</Link>
+                                <button
+                                    onClick={handleDeleteBook}
+                                    className="bg-red-500 text-white p-2 flex justify-center items-center  max-sm:px-1 cursor-pointer rounded hover:bg-red-600"
+                                >
+                                    <MdDelete /> BOOK
+                                </button>
+
+                            </div>}
+                        </div>
                         <h1 className="text-3xl font-bold mb-4">{book.title}</h1>
                         <p className="text-gray-700 mb-2"><strong>Author:</strong> {book.author}</p>
                         <p className="text-gray-700 mb-2"><strong>Genre:</strong> {book.genre}</p>
@@ -110,10 +185,7 @@ const BookDetails = () => {
                         <div className='mx-auto mt-2 border-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
                             <Link className='flex justify-center items-center p-2' to={`/books/${id}/reviews`}>Add Review</Link>
                         </div>
-                        <div className='flex justify-between px-1 mt-2 '>
-                            <Link to={`/books/updatebook/${id}`} className='bg-green-500 hover:bg-green-600 text-white rounded pt-2 px-16 max-sm:px-1'>UPDATE BOOK</Link>
-                            <DeleteBook />
-                        </div>
+
                     </div>
                 ) : (
                     <p>Book not found.</p>
