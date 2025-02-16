@@ -18,6 +18,16 @@ function SidebarProfile({ data }) {
         <div className='w-full mt-4 h-[1px] bg-gray-300 hidden lg:block'></div>
       </div>
 
+    {role === "user" && (
+        <div className='w-full md:flex  flex-col bg-gray-600 rounded text-white px-4 py-1 justify-between items-center mt-4  '>
+        <Link to='/profile'
+        className='mb-2 text-lg hover:font-semibold transition-all duration-200'
+        >Favourites</Link>
+        <Link className='mb-2 text-lg hover:font-semibold transition-all duration-200' to='/profile/orderhistory'>Order History</Link>
+        <Link className='mb-2 text-lg hover:font-semibold transition-all duration-200' to='/profile/settings'>Settings</Link>
+    </div>
+      )}
+
      {role === "admin" && (
        <div className='w-full lg:flex flex-col text-xl justify-center hidden items-center '>
        <Link to='/profile'
