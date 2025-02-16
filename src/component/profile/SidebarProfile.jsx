@@ -21,7 +21,7 @@ function SidebarProfile({ data }) {
       </div>
 
     {role === "user" && (
-        <div className='w-full md:flex  flex-col bg-gray-600 rounded text-white px-4 py-1 justify-between items-center mt-4  '>
+        <div className='w-full md:flex hidden flex-col bg-gray-600 rounded text-white px-4 py-1 justify-between items-center mt-4  '>
         <Link to='/profile'
         className={
             activeMenu === "/profile"
