@@ -146,8 +146,10 @@ const BookDetails = () => {
                             </div>}
                         </div>
                         <h1 className="text-3xl font-bold mb-4">{book.title}</h1>
-                        <p className="text-gray-700 mb-2"><strong>Author:</strong> {book.author}</p>
+                        <div className='flex gap-10 items-center'>
                         <p className="text-gray-700 mb-2"><strong>Genre:</strong> {book.genre}</p>
+                        <p className="text-red-500 mb-2"><strong className='text-gray-700'>Price: </strong> {book.price}</p>
+                        </div>
                         <p className="text-gray-700 mb-4"><strong>Description:</strong> {book.desc}</p>
                         <a href={`https://www.amazon.com/s?k=book+prime+deals&adgrpid=167679127418&hvadid=711546562470&hvdev=c&hvlocphy=9198978&hvnetw=g&hvqmt=b&hvrand=3593060656639287526&hvtargid=kwd-979505776500&hydadcr=21183_13332213&tag=hydglogoo-20&ref=pd_sl_7ii60hkmn6_b`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                             Read more about this book

@@ -1,12 +1,14 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoIosLogOut } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../../store/auth'
 
 
+
 function SidebarProfile({ data }) {
   const role = useSelector((state) => state.auth.role);
+  const [activeMenu, setactiveMenu] = useState('/')
   const dispatch = useDispatch()
   const navigate = useNavigate()
   return (
@@ -21,22 +23,53 @@ function SidebarProfile({ data }) {
     {role === "user" && (
         <div className='w-full md:flex  flex-col bg-gray-600 rounded text-white px-4 py-1 justify-between items-center mt-4  '>
         <Link to='/profile'
-        className='mb-2 text-lg hover:font-semibold transition-all duration-200'
+        className={
+            activeMenu === "/profile"
+              ? "text-white mb-2 text-lg hover:font-semibold transition-all duration-200 underline"
+              : "text-white  mb-2 text-lg hover:font-semibold transition-all duration-200 "
+          }
+            onClick={() => {
+              setactiveMenu("/profile");
+            }}
+            active={activeMenu}
         >Favourites</Link>
-        <Link className='mb-2 text-lg hover:font-semibold transition-all duration-200' to='/profile/orderhistory'>Order History</Link>
-        <Link className='mb-2 text-lg hover:font-semibold transition-all duration-200' to='/profile/settings'>Settings</Link>
+        <Link  to='/profile/orderhistory'
+        className={
+          activeMenu === "/profile/orderhistory"
+            ? "text-white mb-2 text-lg hover:font-semibold transition-all duration-200 underline"
+            : "text-white  mb-2 text-lg hover:font-semibold transition-all duration-200 "
+        }
+          onClick={() => {
+            setactiveMenu("/profile/orderhistory");
+          }}
+          active={activeMenu}
+        >Order History</Link>
+        <Link  to='/profile/settings'
+         className={
+          activeMenu === "/profile/settings"
+            ? "text-white mb-2 text-lg hover:font-semibold transition-all duration-200 underline"
+            : "text-white  mb-2 text-lg hover:font-semibold transition-all duration-200 "
+        }
+          onClick={() => {
+            setactiveMenu("/profile/settings");
+          }}
+          active={activeMenu}
+        >Settings</Link>
     </div>
       )}
 
      {role === "admin" && (
        <div className='w-full lg:flex flex-col text-xl justify-center hidden items-center '>
-       <Link to='/profile'
-         className='mb-2 hover:font-medium transition-all duration-200'
+       <Link to='/admin profile'
+         className={
+          activeMenu === "/admin profile"
+            ? "text-white mb-2 text-lg hover:font-semibold transition-all duration-200 underline"
+            : "text-white  mb-2 text-lg hover:font-semibold transition-all duration-200 "
+        }
+          onClick={() => {
+            setactiveMenu("/admin profile");
+          }}
        >All Order</Link>
-
-       <Link to='/admin profile/addbooks'
-         className='mb-2 hover:font-medium transition-all duration-200'
-       >Add Book</Link>
       
      </div>
      )}

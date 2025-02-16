@@ -55,7 +55,12 @@ function AllOrders() {
 
             {AllOrders && Array.isArray(AllOrders) && AllOrders.length > 0 && (
                 <div className='h-[100%] p-0 md:p-4 '>
+                    <div className='flex justify-between items-center'>
                     <h1 className='text-3xl md:text-5xl text-gray-600 font-semibold mb-8'>All Orders</h1>
+                         <Link to='/admin profile/addbooks'
+                                 className='mb-2 md:text-2xl mr-10 border bg-green-500 text-white px-2 rounded py-1 hover:bg-green-600 transition-all duration-200'
+                               >Add Book</Link>
+                    </div>
                     <div className='mt-4 w-full rounded bg-gray-400 py-2 px-4 flex gap-2'>
                         <div className='w-[3%]'>
                             <h1 className='text-center'>Sr.</h1>
@@ -77,7 +82,7 @@ function AllOrders() {
                         </div>
                     </div>
                     {AllOrders && AllOrders?.map((items, i) => (
-                        <div className='bg-gray-300 w-full flex  rounded py-2 px-4 gap-2 hover:bg-gray-600 cursor-pointer'>
+                        <div className='bg-gray-300 w-full flex  rounded py-2 px-4 gap-2 hover:bg-gray-500 cursor-pointer'>
                             <div className='w-[3%]'>
                                 <h1 className='text-center font-semibold'>{i + 1}</h1>
                             </div>

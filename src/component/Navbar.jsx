@@ -72,24 +72,26 @@ const Navbar = () => {
             Books
           </Link>
 
-          
+
           {/* Conditionally render Cart, About, and Profile based on login status */}
           {isLoggedIn && (
             <>
-              <Link
-                to="/cart"
-                className={
-                  activeMenu === '/cart'
-                    ? 'text-gray-400 underline'
-                    : 'text-white hover:text-gray-400'
-                }
-                onClick={() => {
-                  setactiveMenu('/cart');
-                }}
-                active={activeMenu}
-              >
-                Cart
-              </Link>
+              {isLoggedIn === true && role === "user" && (
+                <Link
+                  to="/cart"
+                  className={
+                    activeMenu === '/cart'
+                      ? 'text-gray-400 underline'
+                      : 'text-white hover:text-gray-400'
+                  }
+                  onClick={() => {
+                    setactiveMenu('/cart');
+                  }}
+                  active={activeMenu}
+                >
+                  Cart
+                </Link>
+              )}
 
               <Link
                 to="/about"
@@ -110,8 +112,8 @@ const Navbar = () => {
                   to="/profile"
                   className={
                     activeMenu === '/profile'
-                      ? 'text-gray-400 underline block'
-                      : 'text-white hover:text-gray-400 block'
+                      ? 'text-white border py-1 px-3 rounded bg-green-500 underline block'
+                      : 'text-white  border py-1 px-3 rounded hover:bg-green-700 block'
                   }
                   onClick={() => {
                     setactiveMenu('/profile');
@@ -126,8 +128,8 @@ const Navbar = () => {
                   to="/admin profile"
                   className={
                     activeMenu === '/profile'
-                      ? 'text-gray-400 underline'
-                      : 'text-white hover:text-gray-400'
+                      ? 'text-white border py-1 px-3 rounded bg-green-500 underline'
+                      : 'text-white border py-1 px-3 rounded hover:bg-green-700'
                   }
                   onClick={() => {
                     setactiveMenu('/profile');
@@ -215,25 +217,27 @@ const Navbar = () => {
             >
               Books
             </Link>
-            
+
 
             {/* Conditionally render Cart, About, and Profile in sidebar */}
             {isLoggedIn && (
               <>
-                <Link
-                  to="/cart"
-                  className={
-                    activeMenu === '/cart'
-                      ? 'text-gray-400 underline block'
-                      : 'text-white hover:text-gray-400 block'
-                  }
-                  onClick={() => {
-                    setactiveMenu('/cart');
-                  }}
-                  active={activeMenu}
-                >
-                  Cart
-                </Link>
+                {isLoggedIn === true && role === "user" && (
+                  <Link
+                    to="/cart"
+                    className={
+                      activeMenu === '/cart'
+                        ? 'text-gray-400 underline'
+                        : 'text-white hover:text-gray-400'
+                    }
+                    onClick={() => {
+                      setactiveMenu('/cart');
+                    }}
+                    active={activeMenu}
+                  >
+                    Cart
+                  </Link>
+                )}
                 <Link
                   to="/about"
                   className={
