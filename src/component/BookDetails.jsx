@@ -98,9 +98,8 @@ const BookDetails = () => {
         const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook-to-favourite`, {}, {
             headers
         })
-        if (!isFavouriteClicked) {
             setIsFavouriteClicked(true);
-        }
+        
         alert(response.data.massage)
     }
 
@@ -124,7 +123,7 @@ const BookDetails = () => {
                             {isLoggedIn === true && role === "user" && <div className='flex gap-5 mt-5 text-2xl flex-col'>
                                 <button
                                     onClick={handleFavourite}
-                                    className={`cursor-pointer p-2 rounded ${isFavouriteClicked
+                                    className={`cursor-pointer  ${isFavouriteClicked
                                         ? 'bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white'
                                         : 'bg-gray-200'
                                         }`}
@@ -174,9 +173,11 @@ const BookDetails = () => {
                                             <Link to={`/reviews/${review._id}/edit`} className="bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded text-white">
                                                 <FaEdit />
                                             </Link>
-                                            <button onClick={() => handleDelete(review._id)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-2 px-4 rounded">
+                                            {isLoggedIn === true && role === "admin" && (
+                                                <button onClick={() => handleDelete(review._id)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-2 px-4 rounded">
                                                 <MdDelete />
                                             </button>
+                                            )}
                                         </div>
                                     </div>
                                 ))
@@ -185,7 +186,9 @@ const BookDetails = () => {
                             )}
                         </div>
                         <div className='mx-auto mt-2 border-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
-                            <Link className='flex justify-center items-center p-2' to={`/books/${id}/reviews`}>Add Review</Link>
+                            {isLoggedIn === true && (
+                                <Link className='flex justify-center items-center p-2' to={`/books/${id}/reviews`}>Add Review</Link>
+                            )}
                         </div>
 
                     </div>
