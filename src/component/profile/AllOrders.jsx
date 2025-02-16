@@ -58,7 +58,7 @@ function AllOrders() {
                     <div className='flex justify-between items-center'>
                     <h1 className='text-3xl md:text-5xl text-gray-600 font-semibold mb-8'>All Orders</h1>
                          <Link to='/admin profile/addbooks'
-                                 className='mb-2 md:text-2xl mr-10 border bg-green-500 text-white px-2 rounded py-1 hover:bg-green-600 transition-all duration-200'
+                                 className='mb-2 md:text-2xl md:mr-10 border bg-green-500 text-white px-2 rounded py-1 hover:bg-green-600 transition-all duration-200'
                                >Add Book</Link>
                     </div>
                     <div className='mt-4 w-full rounded bg-gray-400 py-2 px-4 flex gap-2'>
