@@ -27,7 +27,7 @@ const SignUpPage = () => {
 
                 alert("All Field are required")
             } else {
-                const response = await axios.post(`https://bookmate-backend-production-8e5e.up.railway.app/api/sign-up`, formData);
+                const response = await axios.post(`https://book-mate-backend.vercel.app/api/sign-up`, formData);
                 alert("Sign Up Successfully");
                 navigate('/login')
             }

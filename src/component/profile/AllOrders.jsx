@@ -20,7 +20,7 @@ function AllOrders() {
     useEffect(() => {
         // Fetch both book details and reviews when the component loads
         const fetchData = async () => {
-            const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/getall-orders`, { headers })
+            const response = await axios.get(`https://book-mate-backend.vercel.app/api/getall-orders`, { headers })
             setAllOrders(response.data.data)
         };
 

@@ -12,7 +12,7 @@ function Favourites() {
 }
   useEffect(  ()  => {
    const fecth = async () => {
-    const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/getfavourite-books`,{headers});
+    const response = await axios.get(`https://book-mate-backend.vercel.app/api/getfavourite-books`,{headers});
     setfavouriteBooks(response.data.data)
    }
    fecth();

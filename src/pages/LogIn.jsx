@@ -25,7 +25,7 @@ const LoginPage = () => {
       if (formData.email === "" || formData.password === "") {
         alert("All Field required")
       } else {
-        const response = await axios.post(`https://bookmate-backend-production-8e5e.up.railway.app/api/sign-in`, formData)
+        const response = await axios.post(`https://book-mate-backend.vercel.app/api/sign-in`, formData)
 
         dispatch(authActions.Login());
         dispatch(authActions.changeRole(response.data.role));

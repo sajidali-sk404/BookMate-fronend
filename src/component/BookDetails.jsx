@@ -24,7 +24,7 @@ const BookDetails = () => {
     // Fetch book details
     const fetchBookDetails = async () => {
         try {
-            const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/getbook/${id}`);
+            const response = await axios.get(`https://book-mate-backend.vercel.app/api/getbook/${id}`);
             setBook(response.data.book);
         } catch (error) {
             console.error('Error fetching book details:', error);
@@ -34,7 +34,7 @@ const BookDetails = () => {
     // Fetch reviews for the book
     const fetchReviews = async () => {
         try {
-            const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/books/${id}/reviews`);
+            const response = await axios.get(`https://book-mate-backend.vercel.app/api/books/${id}/reviews`);
             setReviews(response.data);
         } catch (error) {
             console.error('Error fetching reviews:', error);
@@ -69,7 +69,7 @@ const BookDetails = () => {
         if (!confirmDelete) return;
 
         try {
-            await axios.delete(`https://bookmate-backend-production-8e5e.up.railway.app/api/reviews/${reviewId}`);
+            await axios.delete(`https://book-mate-backend.vercel.app/api/reviews/${reviewId}`);
             alert('Review deleted successfully!');
             // Optionally refetch reviews after delete
             setReviews(reviews.filter((review) => review._id !== reviewId));
@@ -84,7 +84,7 @@ const BookDetails = () => {
         if (!confirmDelete) return;
     
         try {
-          await axios.delete(`https://bookmate-backend-production-8e5e.up.railway.app/api/deletebook`,{headers});
+          await axios.delete(`https://book-mate-backend.vercel.app/api/deletebook`,{headers});
           alert('Book deleted successfully!');
           navigate('/books'); 
         } catch (error) {
@@ -95,7 +95,7 @@ const BookDetails = () => {
 
 
     const handleFavourite = async () => {
-        const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook-to-favourite`, {}, {
+        const response = await axios.put(`https://book-mate-backend.vercel.app/api/addbook-to-favourite`, {}, {
             headers
         })
             setIsFavouriteClicked(true);
@@ -104,7 +104,7 @@ const BookDetails = () => {
     }
 
     const handleCart = async () => {
-        const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/addbook-to-cart`, {}, {
+        const response = await axios.put(`https://book-mate-backend.vercel.app/api/addbook-to-cart`, {}, {
             headers
         })
 

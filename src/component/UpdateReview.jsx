@@ -16,7 +16,7 @@ export default function UpdateReview() {
   // Fetch the current review details when the component loads
   const fetchReviewDetails = async () => {
     try {
-      const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/reviews/${id}`);
+      const response = await axios.get(`https://book-mate-backend.vercel.app/api/reviews/${id}`);
       setFormData({
         reviewerName: response.data.reviewerName,
         rating: response.data.rating,
@@ -53,7 +53,7 @@ export default function UpdateReview() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api/reviews/${id}`, formData);
+      await axios.put(`https://book-mate-backend.vercel.app/api/reviews/${id}`, formData);
       alert('Review updated successfully!');
       navigate(`/books`); // Navigate back to the book details page
     } catch (error) {

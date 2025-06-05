@@ -15,7 +15,7 @@ export default function Home() {
   // Fetch random books when the component mounts
   const fetchRandomBooks = async () => {
     try {
-      const response = await axios.get(`https://bookmate-backend-production-8e5e.up.railway.app/api/random-books`);
+      const response = await axios.get(`https://book-mate-backend.vercel.app/api/random-books`);
       setRandomBooks(response.data);
       setLoading(false);
     } catch (error) {
