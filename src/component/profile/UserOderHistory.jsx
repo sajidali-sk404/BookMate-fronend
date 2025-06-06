@@ -13,7 +13,7 @@ function UserOderHistory() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await axios.get(`https://book-mate-backend.vercel.app/api/getorder-history`, { headers });
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getorder-history`, { headers });
         console.log(response)
         if (response.data && response.data.data) {
           setOrderHistory(response.data.data); // Ensure 'data' exists before setting state

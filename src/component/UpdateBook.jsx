@@ -23,7 +23,7 @@ const UpdateBook = () => {
   // Fetch the current book details when the component loads
   const fetchBookDetails = async () => {
     try {
-      const response = await axios.get(`https://book-mate-backend.vercel.app/api/getbook/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getbook/${id}`);
       setFormData({
         url: response.data.book.url,
         title: response.data.book.title,
@@ -59,7 +59,7 @@ const UpdateBook = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://book-mate-backend.vercel.app/api/updatebook`, formData, { headers });
+      await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/updatebook`, formData, { headers });
       alert('Book updated successfully!');
       navigate(`/books/${id}`); // Navigate to the book details page after successful update
     } catch (error) {

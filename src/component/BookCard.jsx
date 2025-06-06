@@ -15,7 +15,7 @@ function BookCard({ data, favourite }) {
 }
 
   const handleRemoveBookFromFavourites = async () => {
-    const response = await axios.put(`https://book-mate-backend.vercel.app/api/removebook-from-favourite`,{},{headers})
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-favourite`,{},{headers})
     alert(response.data.massage)
   }
 

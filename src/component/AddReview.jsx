@@ -31,7 +31,7 @@ const AddReview = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`https://book-mate-backend.vercel.app/api/books/${id}/reviews`, formData);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`, formData);
       console.log(response.data);
       alert('Review added successfully!');
       navigate(`/books/${id}`)

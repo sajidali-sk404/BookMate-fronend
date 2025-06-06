@@ -16,14 +16,14 @@ function Settings() {
   }
 
   const SubmitHandle = async () => {
-    const response = await axios.put(`https://book-mate-backend.vercel.app/api/update-address`,Value, {headers});
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/update-address`,Value, {headers});
     alert(response.data.massage)
   }
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await axios.get(`https://book-mate-backend.vercel.app/api/get-user-information`, { headers });
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`, { headers });
         setProfileData(response.data)
         setValue({ address: response.data.address }); // Ensure 'data' exists before setting state
       } catch (error) {

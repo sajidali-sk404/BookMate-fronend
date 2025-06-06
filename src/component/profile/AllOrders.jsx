@@ -20,7 +20,7 @@ function AllOrders() {
     useEffect(() => {
         // Fetch both book details and reviews when the component loads
         const fetchData = async () => {
-            const response = await axios.get(`https://book-mate-backend.vercel.app/api/getall-orders`, { headers })
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getall-orders`, { headers })
             setAllOrders(response.data.data)
         };
 
@@ -36,7 +36,7 @@ function AllOrders() {
 
     const submitChanges = async (i) => {
         const id = AllOrders[i]._id;
-        const response = await axios.put(`https://bookmate-backend-production-8e5e.up.railway.app/api//update-status/${id}`,Values , {headers})
+        const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api//update-status/${id}`,Values , {headers})
         alert(response.data.massage)
     }
 

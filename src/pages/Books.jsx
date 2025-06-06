@@ -16,7 +16,7 @@ export default function Books() {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://book-mate-backend.vercel.app/api/books`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/books`, {
         params: { limit: 8, page }
 
       });

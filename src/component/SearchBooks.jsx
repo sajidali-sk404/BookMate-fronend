@@ -16,7 +16,7 @@ const SearchBooks = () => {
       }
 
       try {
-        const response = await axios.get(`https://book-mate-backend.vercel.app/api/searchBooks`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/searchBooks`, {
           params: { query: searchQuery }
         });
         setSuggestions(response.data); // Set the suggestions in the state

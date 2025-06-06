@@ -11,7 +11,7 @@ const FictionBooks = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(`https://book-mate-backend.vercel.app/api/books/category/${category}`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/books/category/${category}`);
         setBooks(response.data);
        
       } catch (error) {

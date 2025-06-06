@@ -17,7 +17,7 @@ const UserProfile = () => {
 
   useEffect(() => {
    const fetch = async () => {
-    const response = await axios.get(`https://book-mate-backend.vercel.app/api/get-user-information`,{headers});
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,{headers});
    setUserData(response.data)
    };
    fetch();

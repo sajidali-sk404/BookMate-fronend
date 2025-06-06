@@ -17,7 +17,7 @@ function Cart() {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await axios.get(`https://book-mate-backend.vercel.app/api/getcart-books`, { headers });
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getcart-books`, { headers });
       setCart(res.data.data);
 
 
@@ -27,7 +27,7 @@ function Cart() {
 
   const deleteHandle = async (bookid) => {
     try {
-      const response = await axios.put(`https://book-mate-backend.vercel.app/api/removebook-from-cart/${bookid}`, {}, { headers });
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-cart/${bookid}`, {}, { headers });
 
       alert(response.data.massage);
 
@@ -50,7 +50,7 @@ function Cart() {
 
   const placeOder = async () => {
     try {
-      const response = await axios.post(`https://book-mate-backend.vercel.app/api/place-order`, { order: Cart }, { headers });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/place-order`, { order: Cart }, { headers });
       console.log(response)
       alert(response.data.massage)
       navigate('/profile/orderhistory')
