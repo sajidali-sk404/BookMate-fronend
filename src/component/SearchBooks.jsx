@@ -62,7 +62,7 @@ const SearchBooks = () => {
 
     
       {isTyping && suggestions.length > 0 && (
-        <ul className="suggestions-list bg-gray-300 border border-gray-300 rounded mt-2 w-full">
+        <ul className="suggestions-list bg-gray-300 border absolute border-gray-300 rounded mt-2 w-full">
           {suggestions.map((book) => (
             <li
               key={book._id}
