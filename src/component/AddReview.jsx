@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 const AddReview = () => {
   const { id } = useParams();
+  const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({
     reviewerName: '',
     rating: 1,
@@ -28,13 +29,13 @@ const AddReview = () => {
     });
   };
 
-  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`, formData);
+     setReviews((prevReviews) => [...prevReviews, response.data]);
       toast.success('🎉 Review added successfully!');
-      navigate(`/books/${id}`)
       setFormData({ reviewerName: '', rating: 1, comment: '' });
     } catch (error) {
       console.error('Error adding review:', error);
