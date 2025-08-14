@@ -21,6 +21,9 @@ import Favourites from './component/profile/Favourites.jsx';
 import UserOderHistory from './component/profile/UserOderHistory.jsx';
 import Settings from './component/profile/Settings.jsx';
 import AllOrders from './component/profile/AllOrders.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -39,7 +42,16 @@ function App() {
 
   return (
     <>
-     
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={true} 
+        closeOnClick 
+        pauseOnHover 
+        draggable 
+        theme="colored" 
+      />
         <Navbar />
         <Routes>
           <Route exact path="/"  element={<Home />} />

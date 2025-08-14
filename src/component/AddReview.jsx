@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
-import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const AddReview = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     reviewerName: '',
     rating: 1,
@@ -33,28 +33,12 @@ const AddReview = () => {
     e.preventDefault();
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`, formData);
-     
-       Swal.fire({
-      title: '🎉 Review Added!',
-      text: 'Your review has been added successfully.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#4CAF50',
-      timer: 2000,
-      timerProgressBar: true
-    });
-
+      toast.success('🎉 Review added successfully!');
       navigate(`/books/${id}`)
-      setFormData({ reviewerName: '', rating: 1, comment: '' }); 
+      setFormData({ reviewerName: '', rating: 1, comment: '' });
     } catch (error) {
       console.error('Error adding review:', error);
-        Swal.fire({
-      title: '❌ Failed!',
-      text: 'Failed to add review. Please try again.',
-      icon: 'error',
-      confirmButtonText: 'Try Again',
-      confirmButtonColor: '#E63946'
-    });
+      toast.error('❌ Failed to add review. Please try again.');
     }
   };
 
@@ -77,7 +61,7 @@ const AddReview = () => {
         <div className="mb-4">
           <label className="block text-gray-700">Rating:</label>
           <ReactStars
-          formData={formData}
+            formData={formData}
             count={5}
             onChange={handleRatingChange}
             size={30}
