@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
+import Swal from 'sweetalert2';
 
 const AddReview = () => {
   const { id } = useParams(); 
@@ -32,13 +33,28 @@ const AddReview = () => {
     e.preventDefault();
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`, formData);
-      console.log(response.data);
-      alert('Review added successfully!');
+     
+       Swal.fire({
+      title: '🎉 Review Added!',
+      text: 'Your review has been added successfully.',
+      icon: 'success',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#4CAF50',
+      timer: 2000,
+      timerProgressBar: true
+    });
+
       navigate(`/books/${id}`)
       setFormData({ reviewerName: '', rating: 1, comment: '' }); 
     } catch (error) {
       console.error('Error adding review:', error);
-      alert('Failed to add review. Please try again.');
+        Swal.fire({
+      title: '❌ Failed!',
+      text: 'Failed to add review. Please try again.',
+      icon: 'error',
+      confirmButtonText: 'Try Again',
+      confirmButtonColor: '#E63946'
+    });
     }
   };
 
