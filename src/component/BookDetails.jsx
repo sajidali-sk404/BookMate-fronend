@@ -7,6 +7,9 @@ import { MdDelete } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { useSelector } from 'react-redux';
+import AddReview from './AddReview';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 
 
@@ -16,11 +19,12 @@ const BookDetails = () => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isFavouriteClicked, setIsFavouriteClicked] = useState();
+    const [showReviewForm, setShowReviewForm] = useState(false);
 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const role = useSelector((state) => state.auth.role);
 
-       const navigate = useNavigate()
+    const navigate = useNavigate()
     // Fetch book details
     const fetchBookDetails = async () => {
         try {
@@ -65,42 +69,64 @@ const BookDetails = () => {
     }
 
     const handleDelete = async (reviewId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this review?');
-        if (!confirmDelete) return;
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this Review!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
 
-        try {
-            await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/reviews/${reviewId}`);
-            alert('Review deleted successfully!');
-            // Optionally refetch reviews after delete
-            setReviews(reviews.filter((review) => review._id !== reviewId));
-        } catch (error) {
-            console.error('Error deleting review:', error);
-            alert('Failed to delete the review. Please try again.');
+        if (result.isConfirmed) {
+
+            try {
+                await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/reviews/${reviewId}`);
+                toast.success('🎉 Review deleted successfully!');
+                // Optionally refetch reviews after delete
+                setReviews(reviews.filter((review) => review._id !== reviewId));
+            } catch (error) {
+                console.error('Error deleting review:', error);
+                toast.error('❌ Failed to delete the review. Please try again.');
+            }
         }
     };
 
     const handleDeleteBook = async () => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this book?');
-        if (!confirmDelete) return;
-    
-        try {
-          await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/deletebook`,{headers});
-          alert('Book deleted successfully!');
-          navigate('/books'); 
-        } catch (error) {
-          console.error('Error deleting book:', error);
-          alert('Failed to delete the book. Please try again.');
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this book!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/deletebook`, { headers });
+                toast.success('Deleted!', 'Book deleted successfully!', 'success');
+                navigate('/books');
+            } catch (error) {
+                console.error('Error deleting book:', error);
+                toast.error('Error!', '❌ Failed to delete the book. Please try again.', 'error');
+            }
         }
-      };
+    };
+
 
 
     const handleFavourite = async () => {
         const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/addbook-to-favourite`, {}, {
             headers
         })
-            setIsFavouriteClicked(true);
-        
-        alert(response.data.massage)
+        setIsFavouriteClicked(true);
+
+        toast.success(response.data.massage)
     }
 
     const handleCart = async () => {
@@ -108,10 +134,10 @@ const BookDetails = () => {
             headers
         })
 
-        alert(response.data.massage)
+        toast.success(response.data.massage)
     }
 
-   
+
 
     return (
         <>
@@ -146,8 +172,8 @@ const BookDetails = () => {
                         </div>
                         <h1 className="text-3xl font-bold mb-4">{book.title}</h1>
                         <div className='flex gap-10 items-center'>
-                        <p className="text-gray-700 mb-2"><strong>Genre:</strong> {book.genre}</p>
-                        <p className="text-red-500 mb-2"><strong className='text-gray-700'>Price: </strong> {book.price}</p>
+                            <p className="text-gray-700 mb-2"><strong>Genre:</strong> {book.genre}</p>
+                            <p className="text-red-500 mb-2"><strong className='text-gray-700'>Price: </strong> {book.price}</p>
                         </div>
                         <p className="text-gray-700 mb-4"><strong>Description:</strong> {book.desc}</p>
                         <a href={`https://www.amazon.com/s?k=book+prime+deals&adgrpid=167679127418&hvadid=711546562470&hvdev=c&hvlocphy=9198978&hvnetw=g&hvqmt=b&hvrand=3593060656639287526&hvtargid=kwd-979505776500&hydadcr=21183_13332213&tag=hydglogoo-20&ref=pd_sl_7ii60hkmn6_b`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
@@ -175,8 +201,8 @@ const BookDetails = () => {
                                             </Link>
                                             {isLoggedIn === true && role === "admin" && (
                                                 <button onClick={() => handleDelete(review._id)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-2 px-4 rounded">
-                                                <MdDelete />
-                                            </button>
+                                                    <MdDelete />
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -185,12 +211,22 @@ const BookDetails = () => {
                                 <p>No reviews yet. Be the first to review this book!</p>
                             )}
                         </div>
-                        <div className='mx-auto mt-2 border-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
-                            {isLoggedIn === true && (
-                                <Link className='flex justify-center items-center p-2' to={`/books/${id}/reviews`}>Add Review</Link>
-                            )}
-                        </div>
 
+                        {isLoggedIn === true && (
+                            <button
+                                onClick={() => setShowReviewForm(!showReviewForm)}
+                                className="w-full mt-2 border-2 bg-blue-500 text-white rounded hover:bg-blue-600 p-2"
+                            >
+                                {showReviewForm ? "Cancel" : "Add Review"}
+                            </button>
+                        )}
+                        {showReviewForm && (
+                            <AddReview
+                                bookId={id}
+                                onReviewAdded={(newReview) => setReviews([...reviews, newReview])}
+                                onClose={() => setShowReviewForm(false)}
+                            />
+                        )}
                     </div>
                 ) : (
                     <p>Book not found.</p>

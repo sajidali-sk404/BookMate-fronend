@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
 import { toast } from 'react-toastify';
 
-const AddReview = () => {
-  const { id } = useParams();
-  const [reviews, setReviews] = useState([]);
+const AddReview = ({ bookId, onReviewAdded, onClose }) => {
   const [formData, setFormData] = useState({
     reviewerName: '',
     rating: 1,
@@ -21,7 +18,6 @@ const AddReview = () => {
     });
   };
 
-  // Update rating when stars are clicked
   const handleRatingChange = (newRating) => {
     setFormData({
       ...formData,
@@ -29,14 +25,18 @@ const AddReview = () => {
     });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`, formData);
-     setReviews((prevReviews) => [...prevReviews, response.data]);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URI}/api/books/${bookId}/reviews`,
+        formData
+      );
+
+      onReviewAdded(response.data); // update BookDetails reviews
       toast.success('🎉 Review added successfully!');
       setFormData({ reviewerName: '', rating: 1, comment: '' });
+      onClose(); // close form after submit
     } catch (error) {
       console.error('Error adding review:', error);
       toast.error('❌ Failed to add review. Please try again.');
@@ -59,15 +59,15 @@ const AddReview = () => {
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-gray-700">Rating:</label>
           <ReactStars
-            formData={formData}
             count={5}
             onChange={handleRatingChange}
             size={30}
             activeColor="#ffd700"
-            value={formData.rating} // Set current rating value
+            value={formData.rating}
           />
         </div>
 
@@ -83,12 +83,21 @@ const AddReview = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Submit Review
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Submit Review
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
