@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const UpdateBook = () => {
+const UpdateBook = ({onClose}) => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     url: '',
@@ -36,7 +37,7 @@ const UpdateBook = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching book details:', massage.error);
-      alert('Failed to load book data.');
+      toast.error('Failed to load book data.');
       setLoading(false);
     }
   };
@@ -60,11 +61,11 @@ const UpdateBook = () => {
     e.preventDefault();
     try {
       await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/updatebook`, formData, { headers });
-      alert('Book updated successfully!');
-      navigate(`/books/${id}`); // Navigate to the book details page after successful update
+      toast.success('Book updated successfully!');
+      onClose();
     } catch (error) {
       console.error('Error updating book:', error);
-      alert('Failed to update book. Please try again.');
+      toast.error('Failed to update book. Please try again.');
     }
   };
 
@@ -73,8 +74,8 @@ const UpdateBook = () => {
   }
 
   return (
-    <div className='bg-gray-200 py-14'>
-      <div className="max-w-2xl mx-auto bg-gray-50 p-8 rounded-lg shadow-md">
+    <div className=' absolute top-20 right-80'>
+      <div className="min-w-2xl mx-auto bg-gray-50 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6">Update Book Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -167,6 +168,13 @@ const UpdateBook = () => {
             className="w-full bg-blue-500 cursor-pointer text-white py-2 px-4 rounded hover:bg-blue-600"
           >
             Save Changes
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full bg-gray-400 text-white py-2 mt-2 px-4 rounded hover:bg-gray-500"
+          >
+            Cancel
           </button>
         </form>
       </div>

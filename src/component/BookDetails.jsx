@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactStars from 'react-rating-stars-component';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import AddReview from './AddReview';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import UpdateBook from './UpdateBook';
 
 
 
@@ -20,6 +21,7 @@ const BookDetails = () => {
     const [loading, setLoading] = useState(true);
     const [isFavouriteClicked, setIsFavouriteClicked] = useState();
     const [showReviewForm, setShowReviewForm] = useState(false);
+    const [showEditBook, setShowEditBook] = useState(false);
 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const role = useSelector((state) => state.auth.role);
@@ -60,7 +62,7 @@ const BookDetails = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, [id, fetchReviews]);
 
 
 
@@ -160,7 +162,16 @@ const BookDetails = () => {
                                 <button onClick={handleCart} className='cursor-pointer'><FaShoppingCart /></button>
                             </div>}
                             {isLoggedIn === true && role === "admin" && <div className='flex gap-5 pb-4 text-xl md:flex-col'>
-                                <Link to={`/books/updatebook/${id}`} className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'><FaEdit /> BOOK</Link>
+                               <button className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'
+                                onClick={() => setShowEditBook(!showEditBook)}
+                               >
+                                 <FaEdit /> BOOK
+                               </button>
+                               {showEditBook && (
+                                <UpdateBook 
+                                onClose={() => setShowEditBook(false)}
+                                />
+                               )}
                                 <button
                                     onClick={handleDeleteBook}
                                     className="bg-red-500 text-white p-2 flex justify-center items-center  max-sm:px-1 cursor-pointer rounded hover:bg-red-600"
