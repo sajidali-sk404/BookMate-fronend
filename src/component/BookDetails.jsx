@@ -11,6 +11,8 @@ import AddReview from './AddReview';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import UpdateBook from './UpdateBook';
+import UpdateReview from './UpdateReview';
+
 
 
 
@@ -22,6 +24,7 @@ const BookDetails = () => {
     const [isFavouriteClicked, setIsFavouriteClicked] = useState();
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showEditBook, setShowEditBook] = useState(false);
+    const [editingReviewId, setEditingReviewId] = useState(null);
 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const role = useSelector((state) => state.auth.role);
@@ -162,16 +165,16 @@ const BookDetails = () => {
                                 <button onClick={handleCart} className='cursor-pointer'><FaShoppingCart /></button>
                             </div>}
                             {isLoggedIn === true && role === "admin" && <div className='flex gap-5 pb-4 text-xl md:flex-col'>
-                               <button className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'
-                                onClick={() => setShowEditBook(!showEditBook)}
-                               >
-                                 <FaEdit /> BOOK
-                               </button>
-                               {showEditBook && (
-                                <UpdateBook 
-                                onClose={() => setShowEditBook(false)}
-                                />
-                               )}
+                                <button className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'
+                                    onClick={() => setShowEditBook(!showEditBook)}
+                                >
+                                    <FaEdit /> BOOK
+                                </button>
+                                {showEditBook && (
+                                    <UpdateBook
+                                        onClose={() => setShowEditBook(false)}
+                                    />
+                                )}
                                 <button
                                     onClick={handleDeleteBook}
                                     className="bg-red-500 text-white p-2 flex justify-center items-center  max-sm:px-1 cursor-pointer rounded hover:bg-red-600"
@@ -207,13 +210,23 @@ const BookDetails = () => {
                                         />
                                         <p className="text-gray-700 mb-2"><strong>Comment:</strong> {review.comment}</p>
                                         <div className='flex justify-end gap-5'>
-                                            <Link to={`/reviews/${review._id}/edit`} className="bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded text-white">
-                                                <FaEdit />
-                                            </Link>
-                                            {isLoggedIn === true && role === "admin" && (
-                                                <button onClick={() => handleDelete(review._id)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-2 px-4 rounded">
-                                                    <MdDelete />
-                                                </button>
+                                            {editingReviewId === review._id && (
+                                                <UpdateReview reviewId={review._id} onClose={() => setEditingReviewId(null)} />
+                                            )}
+                                            {editingReviewId !== review._id && (
+                                                <>
+                                                    <button
+                                                        onClick={() => setEditingReviewId(review._id)}
+                                                        className="bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded text-white"
+                                                    >
+                                                        <FaEdit />
+                                                    </button>
+                                                    {isLoggedIn === true && role === "admin" && (
+                                                        <button onClick={() => handleDelete(review._id)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-2 px-4 rounded">
+                                                            <MdDelete />
+                                                        </button>
+                                                    )}
+                                                </>
                                             )}
                                         </div>
                                     </div>

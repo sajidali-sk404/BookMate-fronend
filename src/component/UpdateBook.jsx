@@ -56,7 +56,6 @@ const UpdateBook = ({onClose}) => {
   };
 
   // Handle form submission
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
