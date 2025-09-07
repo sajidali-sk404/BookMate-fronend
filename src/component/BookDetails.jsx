@@ -70,7 +70,11 @@ const BookDetails = () => {
 
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen text-gray-600">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+            </div>
+        );
     }
 
     const handleDelete = async (reviewId) => {
@@ -165,22 +169,27 @@ const BookDetails = () => {
                                 <button onClick={handleCart} className='cursor-pointer'><FaShoppingCart /></button>
                             </div>}
                             {isLoggedIn === true && role === "admin" && <div className='flex gap-5 pb-4 text-xl md:flex-col'>
-                                <button className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'
-                                    onClick={() => setShowEditBook(!showEditBook)}
-                                >
-                                    <FaEdit /> BOOK
-                                </button>
                                 {showEditBook && (
                                     <UpdateBook
                                         onClose={() => setShowEditBook(false)}
                                     />
                                 )}
-                                <button
-                                    onClick={handleDeleteBook}
-                                    className="bg-red-500 text-white p-2 flex justify-center items-center  max-sm:px-1 cursor-pointer rounded hover:bg-red-600"
-                                >
-                                    <MdDelete /> BOOK
-                                </button>
+                                {!showEditBook && (
+                                    <>
+                                        <button className='bg-green-500 hover:bg-green-600 text-white flex gap-2 justify-center items-center rounded p-2  max-sm:px-1'
+                                            onClick={() => setShowEditBook(!showEditBook)}
+                                        >
+                                            <FaEdit /> BOOK
+                                        </button>
+
+                                        <button
+                                            onClick={handleDeleteBook}
+                                            className="bg-red-500 text-white p-2 flex justify-center items-center  max-sm:px-1 cursor-pointer rounded hover:bg-red-600"
+                                        >
+                                            <MdDelete /> BOOK
+                                        </button>
+                                    </>
+                                )}
 
                             </div>}
                         </div>

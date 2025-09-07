@@ -10,7 +10,7 @@ export default function Home() {
   const [randomBooks, setRandomBooks] = useState([]);
   const [loading, setLoading] = useState(true);
  
- 
+
 
   // Fetch random books when the component mounts
   const fetchRandomBooks = async () => {
@@ -32,7 +32,11 @@ export default function Home() {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+      </div>
+    );
   }
 
  

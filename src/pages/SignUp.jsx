@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const SignUpPage = () => {
@@ -25,14 +26,14 @@ const SignUpPage = () => {
                 formData.password === "" ||
                 formData.address === "") {
 
-                alert("All Field are required")
+                toast.info("All Field are required")
             } else {
                 const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/sign-up`, formData);
-                alert("Sign Up Successfully");
+                toast.success("Sign Up Successfully");
                 navigate('/login')
             }
         } catch (error) {
-            alert(error.response.data.massage)
+            toast.error(error.response.data.massage)
         }
     };
 

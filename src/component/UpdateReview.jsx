@@ -65,8 +65,12 @@ useEffect(() => {
   };
 
 
-  if (loading) {
-    return <div>Loading...</div>;
+   if (loading) {
+    return (
+      <div className="flex justify-center items-center h-5 text-gray-600">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+      </div>
+    );
   }
 
   return (

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { authActions } from '../store/auth';
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify';
 
 
 const LoginPage = () => {
@@ -23,7 +24,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       if (formData.email === "" || formData.password === "") {
-        alert("All Field required")
+        toast.info("All Field required")
       } else {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/sign-in`, formData)
 
@@ -36,7 +37,7 @@ const LoginPage = () => {
         navigate("/")
       }
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
   };
 

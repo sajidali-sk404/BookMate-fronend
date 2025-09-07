@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function AddBook() {
     const headers = {
@@ -34,12 +35,12 @@ function AddBook() {
         try {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/addbook`, formData, { headers });
             console.log(response);
-            alert('Book added successfully!' || response.data.message);
+            toast.success('Book added successfully!' || response.data.message);
             navigate(`/books`);
             setFormData({ url: '', title: '', author: '', price: '', genre: '', desc: '' }); // Reset form
         } catch (error) {
             console.error('Error adding book:', error.message);
-            alert('Failed to add book. Please try again.');
+            toast.error('Failed to add book. Please try again.');
         }
     };
 

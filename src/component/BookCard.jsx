@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 function BookCard({ data, favourite }) {
   const truncateText = (text, maxLength) => {
@@ -16,7 +17,7 @@ function BookCard({ data, favourite }) {
 
   const handleRemoveBookFromFavourites = async () => {
     const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-favourite`,{},{headers})
-    alert(response.data.massage)
+    toast.success(response.data.massage)
   }
 
   return (

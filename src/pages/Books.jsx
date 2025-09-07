@@ -12,6 +12,7 @@ export default function Books() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
+ 
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -46,6 +47,14 @@ export default function Books() {
     setPage((prevPage) => prevPage + 1); // Load the next page
   };
 
+    if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -68,8 +77,6 @@ export default function Books() {
             See More
           </button>
         )}
-        {loading && <p>Loading more books...</p>}
-        {!hasMore && !loading && <p>No more books to load.</p>}
       </div>
 
     </>

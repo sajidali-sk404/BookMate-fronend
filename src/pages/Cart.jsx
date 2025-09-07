@@ -2,11 +2,13 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { AiFillDelete } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 function Cart() {
   const [Cart, setCart] = useState()
   const [Total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -19,8 +21,7 @@ function Cart() {
     const fetch = async () => {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getcart-books`, { headers });
       setCart(res.data.data);
-
-
+      setLoading(false);
     }
     fetch();
   }, [Cart])
@@ -28,14 +29,15 @@ function Cart() {
   const deleteHandle = async (bookid) => {
     try {
       const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-cart/${bookid}`, {}, { headers });
-
-      alert(response.data.massage);
+      toast.success(response.data.massage);
+      
 
     } catch (error) {
-      console.log("Error removing book:", error.response ? error.response.data : error.message);
+      toast.error("Error removing book:", error.response ? error.response.data : error.message);
     }
 
   }
+  
 
   useEffect(() => {
     if (Cart && Cart.length > 0) {
@@ -51,19 +53,24 @@ function Cart() {
   const placeOder = async () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/place-order`, { order: Cart }, { headers });
-      console.log(response)
-      alert(response.data.massage)
+      toast.success(response.data.massage)
       navigate('/profile/orderhistory')
     } catch (error) {
       console.log(error)
     }
   }
 
+    if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className='m-4 px-12 py-8'>
-        {!Cart && <div className='flex justify-center items-center h-screen'>Loading...</div>}
         {Cart && Cart.length === 0 && (
           <div className='h-full flex justify-center items-center' >
             Empty Cart
@@ -71,6 +78,7 @@ function Cart() {
         )}
 
         {Cart && Cart.length > 0 && (
+          
           <>
             <h1 className='text-5xl font-semibold text-gray-500 mb-8'>Your Cart</h1>
             {Cart.map((items, i) => (
