@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-import BookCard from '../component/BookCard';
-import SearchBooks from '../component/SearchBooks';
-
+import BookCard from "../component/BookCard";
+import SearchBooks from "../component/SearchBooks";
 
 export default function Home() {
   const [randomBooks, setRandomBooks] = useState([]);
   const [loading, setLoading] = useState(true);
- 
-
 
   // Fetch random books when the component mounts
   const fetchRandomBooks = async () => {
     try {
-      console.log(import.meta.env.BACKEND_URI)
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/random-books`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URI}/api/random-books`
+      );
       setRandomBooks(response.data);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching random books:', error);
+      console.error("Error fetching random books:", error);
       setLoading(false);
     }
   };
@@ -28,8 +26,6 @@ export default function Home() {
   useEffect(() => {
     fetchRandomBooks();
   }, []);
-
-
 
   if (loading) {
     return (
@@ -39,41 +35,39 @@ export default function Home() {
     );
   }
 
- 
-
   return (
     <>
-      <div>
-       
-        
-        <div className='flex flex-col justify-between mt-1 px-40 py-24 max-sm:pt-10   max-sm:px-6 bg-gray-400 gap-4'>
-        <div>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-gray-500 to-gary-600 text-black py-20 px-6 sm:px-16 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-6">
+          Discover Your Next Favorite Book 📚
+        </h1>
+        <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
+          Explore books that inspire, motivate, and transport you into new worlds.
+        </p>
+        <div className="max-w-xl mx-auto">
           <SearchBooks />
         </div>
-          <h1 className='text-2xl font-bold max-sm:mt-10 text-blue-800'>Find the Story That Speaks to You</h1>
-          <p className='text-blue-900'>Explore books that connect with your heart and mind, one page at a time.</p>
-          
+      </section>
+
+      {/* Recommended Books */}
+      <section className="bg-gray-100 py-12 px-5 sm:px-10">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-10 text-center text-gray-800">
+          Recommended Books
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {Array.isArray(randomBooks) &&
+            randomBooks.map((book) => <BookCard key={book._id} data={book} />)}
         </div>
-      </div>
-
-      <div className='bg-gray-200 pt-10 px-5 pb-5  max-sm:px-2'>
-        
-        <h1 className="text-3xl max-sm:text-xl max-sm:mb-10  font-bold mb-10 text-center ">Recommended Books</h1>
-          
-        <div className='grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4  gap-8 px-10 bg-gray-200'>
-
-      {Array.isArray(randomBooks) && randomBooks?.map((book) => (
-          <BookCard key={`${book._id}`} data={book} /> 
-        ))}
-
+        <div className="text-center mt-12">
+          <Link
+            to="/books"
+            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md text-lg hover:bg-blue-700 transition-all"
+          >
+            View All Books
+          </Link>
         </div>
-
-       
-         </div>
-
-         <div className='text-center mb-10'>
-            <Link className='  text-xl text-blue-800 hover:text-blue-600 hover:underline' to="/books">View All Books </Link>
-          </div>
-      </>
-      )
+      </section>
+    </>
+  );
 }

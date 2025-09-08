@@ -1,42 +1,68 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import BookCard from '../BookCard'
-
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import BookCard from "../BookCard";
 
 function Favourites() {
-  const [favouriteBooks, setfavouriteBooks] = useState()
+  const [favouriteBooks, setFavouriteBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const headers = {
     id: localStorage.getItem("id"),
-    authorization: `Baerer ${localStorage.getItem("token")}`,
-    
-}
-  useEffect(  ()  => {
-   const fecth = async () => {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getfavourite-books`,{headers});
-    setfavouriteBooks(response.data.data)
-   }
-   fecth();
-  }, [favouriteBooks])
-  
+    authorization: `Bearer ${localStorage.getItem("token")}`, // fixed typo
+  };
+
+  useEffect(() => {
+    const fetchFavourites = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URI}/api/getfavourite-books`,
+          { headers }
+        );
+        setFavouriteBooks(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching favourite books:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavourites();
+  }, []); // ✅ run only once
 
   return (
-    <div className='m-5'>
-    {favouriteBooks && favouriteBooks.length === 0 && (
-      <div className='flex flex-col text-sm md:text-3xl gap-5 text-gray-600 items-center h-full justify-center'>
-        No Favourites Book 
-        <img className='w-8 md:w-16' src="https://cdn-icons-png.flaticon.com/512/3126/3126608.png" alt="" />
-      </div>
-    )}
+    <div className="m-5">
+      {/* Loading state */}
+      {loading && (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600"></div>
+        </div>
+      )}
 
-    <div className='grid grid-cols-1  gap-5 md:grid-cols-2 lg:grid-cols-3'>
-      {favouriteBooks && favouriteBooks.map((book, i) =>(
-    <div key={i}>
-    <BookCard data={book} favourite={true}/>
+      {/* No favourites */}
+      {!loading && favouriteBooks.length === 0 && (
+        <div className="flex flex-col items-center justify-center text-gray-600 gap-4 h-64">
+          <p className="text-lg md:text-2xl font-semibold">
+            No Favourite Books Yet
+          </p>
+          <img
+            className="w-12 md:w-20 opacity-70"
+            src="https://cdn-icons-png.flaticon.com/512/3126/3126608.png"
+            alt="No favourites"
+          />
+        </div>
+      )}
+
+      {/* Favourite books grid */}
+      {!loading && favouriteBooks.length > 0 && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {favouriteBooks.map((book) => (
+            <BookCard key={book._id} data={book} favourite={true} />
+          ))}
+        </div>
+      )}
     </div>
-    ))}
-    </div>
-    </div>
-  )
+  );
 }
 
-export default Favourites
+export default Favourites;

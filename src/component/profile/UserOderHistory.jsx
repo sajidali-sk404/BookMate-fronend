@@ -1,111 +1,143 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function UserOderHistory() {
-  const [OrderHistory, setOrderHistory] = useState([])
+function UserOrderHistory() {
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const headers = {
     id: localStorage.getItem("id"),
-    authorization: `Baerer ${localStorage.getItem("token")}`
-  }
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/getorder-history`, { headers });
-        console.log(response)
-        if (response.data && response.data.data) {
-          setOrderHistory(response.data.data); // Ensure 'data' exists before setting state
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URI}/api/getorder-history`,
+          { headers }
+        );
+        if (response.data?.data) {
+          setOrderHistory(response.data.data);
         } else {
-          console.log("Unexpected response structure:", response);
+          console.warn("Unexpected response:", response);
         }
       } catch (error) {
-        console.log(error)
+        console.error("Error fetching order history:", error);
+      } finally {
+        setLoading(false);
       }
-    }
-    fetch();
-  }, [])
+    };
+    fetchOrders();
+  }, []);
 
-  console.log("Order History State:", OrderHistory);
+  // 🛠 Helper: status badge
+  const getStatusBadge = (status) => {
+    const colors = {
+      "Order Placed": "bg-yellow-100 text-yellow-700",
+      Canceled: "bg-red-100 text-red-700",
+      Delivered: "bg-green-100 text-green-700",
+    };
+    return (
+      <span
+        className={`px-2 py-1 rounded text-sm font-medium ${
+          colors[status] || "bg-gray-100 text-gray-700"
+        }`}
+      >
+        {status}
+      </span>
+    );
+  };
+
+  // 🛠 Loader
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[80vh]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-600"></div>
+      </div>
+    );
+  }
+
+  // 🛠 Empty state
+  if (!orderHistory.length) {
+    return (
+      <div className="h-[80vh] flex flex-col justify-center items-center text-center px-4">
+        <h1 className="text-3xl md:text-5xl font-semibold text-gray-500 mb-4">
+          No Order History
+        </h1>
+        <p className="text-gray-400">Your past orders will appear here.</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {!OrderHistory && <div className='flex justify-center items-center h-screen'>Loading...</div>}{" "}
-      {OrderHistory && OrderHistory.length === 0 && (
-        <div className='h-[80vh] p-4'>
-          <div className='h-[100%] flex flex-col justify-center items-center' >
-            <h1 className='text-5xl font-semibold text-gray-500 mb-8'>No Order History</h1>
-          </div>
-        </div>
-      )}
+    <div className="p-2 md:p-6">
+      <h1 className="text-2xl md:text-4xl text-gray-700 font-bold mb-6">
+        Your Order History
+      </h1>
 
-      {OrderHistory.length > 0 && (
-        <div className='h-[100%] p-0 md:p-4 '>
-          <h1 className='text-3xl md:text-5xl text-gray-600 font-semibold mb-8'>Your Order History</h1>
-          <div className='mt-4 w-full rounded bg-gray-300 py-2 px-4 flex gap-2'>
-            <div className='w-[3%]'>
-              <h1 className='text-center'>Sr.</h1>
-            </div>
-            <div className='w-[22%]'>
-              <h1 className='md:text-xl font-semibold'>Books</h1>
-            </div>
-            <div className='w-[45%]'>
-              <h1 className='md:text-xl font-semibold'>Description</h1>
-            </div>
-            <div className='w-[9%]'>
-              <h1 className='md:text-xl font-semibold'>Price</h1>
-            </div>
-            <div className='w-[16%]'>
-              <h1 className='md:text-xl font-semibold'>Status</h1>
-            </div>
-            <div className='w-none md:w-[5%] hidden md:block'>
-              <h1 className='md:text-xl font-semibold'>Mode</h1>
-            </div>
-          </div>
+      <div className="hidden md:flex bg-gray-100 p-3 rounded font-semibold text-gray-700">
+        <div className="w-[5%] text-center">#</div>
+        <div className="w-[25%]">Book</div>
+        <div className="w-[40%]">Description</div>
+        <div className="w-[10%]">Price</div>
+        <div className="w-[15%]">Status</div>
+        <div className="w-[5%]">Mode</div>
+      </div>
 
-          {OrderHistory.map((items, i) => {
-            return (
-              <div key={i} className='w-full rounded py-2 bg-gray-300 px-4 flex gap-4 hover:cursor-pointer'>
-                <div className='w-[3%]'>
-                  <h1 className='text-center'>{i + 1}</h1>
-                </div>
-
-                <div className='w-[22%]'>
-                  <Link className='hover:text-blue-700' to={`/books/${items.book._id}`}>{items.book.title}</Link>
-                </div>
-
-                <div className='w-[45%]'>
-                  <h1>{items.book.desc.slice(0, 50)}...</h1>
-                </div>
-
-                <div className='w-[9%]'>
-                  <h1>{items.book.price}</h1>
-                </div>
-
-                <div className='w-[16%]'>
-                  <h1 className='font-semibold'>
-                    {items.status === "Order Placed" ? (
-                      <div className='text-yellow-500'>{items.status}</div>
-                    ) : items.status === "Canceled" ? (
-                      <div className='text-red-500'>{items.status}</div>
-                    ) : (
-                      <div className='text-green-500'>{items.status}</div>
-                    )}
-                  </h1>
-                </div>
-
-                <div className='w-none md:[5%] hidden md:block'>
-                  <h1 className='text-sm'>COD</h1>
-                </div>
+      <div className="space-y-3 mt-4">
+        {orderHistory.map((item, i) => {
+          const book = item.book; // safer ref
+          return (
+            <div
+              key={item._id || i}
+              className="flex flex-col md:flex-row bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md transition"
+            >
+              {/* Sr */}
+              <div className="md:w-[5%] flex items-center justify-center font-medium text-gray-600">
+                {i + 1}
               </div>
-            )
-          })}
 
-        </div>
-      )}
-    </>
-  )
+              {/* Book */}
+              <div className="md:w-[25%] mb-2 md:mb-0">
+                {book ? (
+                  <Link
+                    to={`/books/${book?._id}`}
+                    className="text-blue-600 hover:underline font-medium"
+                  >
+                    {book?.title}
+                  </Link>
+                ) : (
+                  <span className="text-red-500 italic">
+                    Book no longer available
+                  </span>
+                )}
+              </div>
+
+              {/* Description */}
+              <div className="md:w-[40%] text-gray-600 text-sm">
+                {book?.desc ? `${book.desc.slice(0, 60)}...` : "N/A"}
+              </div>
+
+              {/* Price */}
+              <div className="md:w-[10%] font-semibold text-gray-800">
+                {book?.price ? `$${book.price}` : "-"}
+              </div>
+
+              {/* Status */}
+              <div className="md:w-[15%]">{getStatusBadge(item.status)}</div>
+
+              {/* Mode */}
+              <div className="hidden md:block md:w-[5%] text-sm text-gray-500">
+                COD
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
-export default UserOderHistory;
+export default UserOrderHistory;

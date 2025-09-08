@@ -1,53 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import BookCard from '../component/BookCard';
-import FictionBook from '../component/FictionBook';
-
-
+import BookCard from "../component/BookCard";
+import FictionBook from "../component/FictionBook";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-
- 
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/books`, {
-        params: { limit: 8, page }
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URI}/api/books`,
+        {
+          params: { limit: 8, page },
+        }
+      );
 
-      });
       const newBooks = response.data.books || [];
 
-      // Add the new books to the existing list of books
       setBooks((prevBooks) => {
-        const uniqueBooks = new Set([...prevBooks, ...newBooks]); // Ensure uniqueness
-        return Array.from(uniqueBooks); // Convert Set back to array
+        // ✅ Deduplicate using IDs instead of Set with objects
+        const uniqueMap = new Map();
+        [...prevBooks, ...newBooks].forEach((book) =>
+          uniqueMap.set(book._id, book)
+        );
+        return Array.from(uniqueMap.values());
       });
-      // Check if there are more books to load
+
       setHasMore(response.data.currentPage < response.data.totalPages);
-      setLoading(false);
     } catch (error) {
-      console.error('Error fetching books:', error);
+      console.error("Error fetching books:", error);
+    } finally {
       setLoading(false);
+      setInitialLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchBooks();
   }, [page]);
 
-
   const handleSeeMore = () => {
-    setPage((prevPage) => prevPage + 1); // Load the next page
+    if (!loading) setPage((prevPage) => prevPage + 1);
   };
 
-    if (loading) {
+  if (initialLoading) {
     return (
       <div className="flex justify-center items-center h-screen text-gray-600">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
@@ -55,30 +57,63 @@ export default function Books() {
     );
   }
 
-
   return (
     <>
-
       <FictionBook />
-      <h1 className=' flex justify-center text-2xl   p-5 font-bold bg-gray-200 '>All Books</h1>
 
-      <div className='grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 bg-gray-200'>
-        { books.map((book, index) => (
-          <BookCard key={`${book._id}-${index}`} data={book} />
-        ))}
-      </div>
+      <h1 className="flex justify-center text-3xl font-bold py-6 bg-gray-100 text-gray-700 tracking-wide">
+        All Books
+      </h1>
 
-      <div className='text-center mb-4'>
-        {hasMore && !loading && (
+      {books.length === 0 ? (
+        <div className="flex justify-center items-center py-20 text-gray-500 text-lg">
+          No books available at the moment.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 bg-gray-100">
+          {books.map((book) => (
+            <BookCard key={book._id} data={book} />
+          ))}
+        </div>
+      )}
+
+      <div className="text-center mb-10">
+        {hasMore && (
           <button
             onClick={handleSeeMore}
-            className="text-blue-800 cursor-pointer   rounded hover:text-blue-600 hover:underline mt-4"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading}
           >
-            See More
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Loading...
+              </span>
+            ) : (
+              "See More"
+            )}
           </button>
         )}
       </div>
-
     </>
-  )
+  );
 }

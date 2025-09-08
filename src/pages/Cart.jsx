@@ -68,56 +68,87 @@ function Cart() {
     );
   }
 
-  return (
-    <>
-      <div className='m-4 px-12 py-8'>
-        {Cart && Cart.length === 0 && (
-          <div className='h-full flex justify-center items-center' >
-            Empty Cart
-          </div>
-        )}
+ return (
+  <>
+    <div className="m-4 px-4 md:px-12 py-8">
+      {/* Empty Cart */}
+      {Cart && Cart.length === 0 && (
+        <div className="h-[70vh] flex flex-col justify-center items-center text-gray-500">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png"
+            alt="Empty Cart"
+            className="h-36 mb-4 opacity-70 animate-pulse"
+          />
+          <h1 className="text-3xl font-bold">Your cart is empty</h1>
+          <p className="text-gray-400 mt-2">Add some books to see them here 📚</p>
+        </div>
+      )}
 
-        {Cart && Cart.length > 0 && (
-          
-          <>
-            <h1 className='text-5xl font-semibold text-gray-500 mb-8'>Your Cart</h1>
-            {Cart.map((items, i) => (
-              <div key={i} className='w-full border bg-gray-300  my-4 rounded flex flex-col md:flex-row p-4 justify-between items-center'>
-                <img src={items.url} alt="" className='h-[20vh] md:h-[10] rounded object-cover' />
+      {/* Cart with Items */}
+      {Cart && Cart.length > 0 && (
+        <>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-10">Your Shopping Cart</h1>
 
-                <div className='w-full md:w-auto'>
-                  <h1 className='text-2xl text-start mt-2 md:mt-0'>{items.title}</h1>
-                  <p className='mt-2 hidden lg:block'>{items.desc.slice(0, 100)}...</p>
-                  <p className='mt-2 hidden md:block lg:hidden'>{items.desc.slice(0, 65)}...</p>
-                  <p className='mt-2 block md:hidden'>{items.desc.slice(0, 100)}...</p>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Cart Items */}
+            <div className="flex-1">
+              {Cart.map((items, i) => (
+                <div
+                  key={i}
+                  className="w-full border bg-white shadow-lg rounded-xl mb-6 p-6 flex flex-col md:flex-row gap-6 hover:shadow-xl hover:scale-[1.01] transition"
+                >
+                  {/* Book Image */}
+                  <img
+                    src={items.url}
+                    alt={items.title}
+                    className="h-[22vh] md:h-[18vh] w-auto rounded-lg object-cover mx-auto md:mx-0"
+                  />
+
+                  {/* Book Info */}
+                  <div className="flex-1 text-center md:text-left">
+                    <h1 className="text-xl md:text-2xl font-semibold text-gray-900">{items.title}</h1>
+                    <p className="mt-2 text-gray-600 hidden lg:block">{items.desc.slice(0, 100)}...</p>
+                    <p className="mt-2 text-gray-600 hidden md:block lg:hidden">{items.desc.slice(0, 65)}...</p>
+                    <p className="mt-2 text-gray-600 block md:hidden">{items.desc.slice(0, 100)}...</p>
+                  </div>
+
+                  {/* Price & Delete */}
+                  <div className="flex flex-col items-center justify-between">
+                    <h2 className="text-2xl font-bold text-green-600">PKR {items.price}</h2>
+                    <button
+                      onClick={() => deleteHandle(items._id)}
+                      className="mt-4 flex items-center gap-2 bg-red-100 text-red-700 border border-red-700 rounded-lg px-4 py-2 hover:bg-red-200 transition"
+                    >
+                      <AiFillDelete size={20} /> Remove
+                    </button>
+                  </div>
                 </div>
-                <div className='flex mt-4 w-full md:w-auto items-center justify-between'>
-                  <h2 className='flex text-3xl font-semibold'>pkr{items.price}</h2>
-                  <button onClick={() => deleteHandle(items._id)} className='bg-red-100 text-red-700 border border-red-700 rounded p-2 ms-12'><AiFillDelete /></button>
+              ))}
+            </div>
+
+            {/* Order Summary */}
+            <div className="lg:w-[30%] w-full">
+              <div className="sticky top-20 p-6 border bg-gradient-to-br from-gray-50 to-gray-200 shadow-xl rounded-xl">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Order Summary</h1>
+                <div className="mt-4 flex items-center justify-between text-lg text-gray-700">
+                  <span>{Cart.length} Books</span>
+                  <span className="font-semibold text-green-600">PKR {Total}</span>
                 </div>
-              </div>
-            ))}
-          </>
-        )}
-
-
-        {Cart && Cart.length > 0 && (
-          <div className='flex justify-end items-center '>
-            <div className='mt-4  p-4 w-[20vw] border bg-gray-300'>
-              <div className='px-4  rounded'>
-                <h1 className='text-3xl font-semibold'>Total Amount</h1>
-                <div className='mt-3 flex items-center justify-between text-xl'><h2>{Cart.length} Books </h2> <h2>pkr{Total}</h2></div>
-              </div>
-              <div className='w-[100%] mt-3'>
-                <button onClick={placeOder} className='rounded border py-2 bg-green-600 hover:bg-green-800 text-white cursor-pointer px-4py-2 flex justify-center w-full font-semibold'>Place Your Order</button>
+                <button
+                  onClick={placeOder}
+                  className="mt-6 w-full rounded-lg py-3 bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold shadow-lg transition transform hover:scale-[1.02]"
+                >
+                  Place Your Order
+                </button>
+                <p className="mt-3 text-sm text-gray-500 text-center">Secure checkout • 100% safe</p>
               </div>
             </div>
           </div>
-        )}
-      </div>
-
-    </>
-  )
+        </>
+      )}
+    </div>
+  </>
+);
 }
 
 export default Cart

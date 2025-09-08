@@ -11,7 +11,7 @@ export default function UpdateReview({ reviewId ,onClose }) {
     comment: '',
   });
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  
 
   // Fetch the current review details when the component loads
   const fetchReviewDetails = async () => {

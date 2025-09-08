@@ -36,7 +36,7 @@ function AddBook() {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/addbook`, formData, { headers });
             console.log(response);
             toast.success('Book added successfully!' || response.data.message);
-            navigate(`/books`);
+            // navigate(`/books`);
             setFormData({ url: '', title: '', author: '', price: '', genre: '', desc: '' }); // Reset form
         } catch (error) {
             console.error('Error adding book:', error.message);
@@ -139,7 +139,7 @@ function AddBook() {
                         className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                     >
                         Add Book
-                    </button>
+                    </button>  
                 </form>
             </div>
         </div>

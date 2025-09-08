@@ -1,11 +1,16 @@
-import React from 'react'
+import React from "react";
 
 export default function Footer() {
-    return (
-        <footer className='flex bg-gray-600 text-white p-3 gap-3 px-40 max-sm:px-2 max-sm:font-light'>
-           CopyRight &copy;  <span> Developed by Sajid Ali  </span>
-        </footer>
-
-
-    )
+  return (
+    <footer className="bg-gray-600 text-white py-4">
+      <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+        <p className="text-sm sm:text-base">
+          &copy; {new Date().getFullYear()} BookMate. All rights reserved.
+        </p>
+        <p className="mt-2 sm:mt-0 text-sm sm:text-base">
+          Developed by <span className="font-semibold">Sajid Ali</span>
+        </p>
+      </div>
+    </footer>
+  );
 }
