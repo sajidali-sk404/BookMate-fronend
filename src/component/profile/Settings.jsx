@@ -9,35 +9,50 @@ function Settings() {
   const [message, setMessage] = useState(null);
 
   const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`, // fixed typo
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  // ✅ Corrected handleChange
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValue({ ...value, [name]: value });
+    const { name, value: val } = e.target;
+    setValue((prev) => ({ ...prev, [name]: val }));
   };
 
+  // ✅ Submit updated address
   const handleSubmit = async () => {
     try {
       setUpdating(true);
       const response = await axios.put(
         `${import.meta.env.VITE_BACKEND_URI}/api/update-address`,
-        value,
+        { address: value.address },
         { headers }
       );
-      setMessage({ type: "success", text: response.data.message });
+
+      const msg =
+        response.data?.message || response.data?.massage || "Address updated";
+
+      setMessage({ type: "success", text: msg });
+
+      // update UI with fresh data if backend returns user
+      if (response.data?.user) {
+        setProfileData(response.data.user);
+        setValue({ address: response.data.user.address || "" });
+      }
     } catch (error) {
-      console.error(error);
+      console.error("update-address error:", error);
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Failed to update address",
+        text:
+          error.response?.data?.message ||
+          error.response?.data?.massage ||
+          "Failed to update address",
       });
     } finally {
       setUpdating(false);
     }
   };
 
+  // ✅ Fetch profile info
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -45,11 +60,18 @@ function Settings() {
           `${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,
           { headers }
         );
-        setProfileData(response.data);
-        setValue({ address: response.data.address || "" });
+        const user = response.data?.user ?? response.data;
+        setProfileData(user);
+        setValue({ address: user?.address || "" });
       } catch (error) {
-        console.error(error);
-        setMessage({ type: "error", text: "Failed to load profile data" });
+        console.error("fetchProfile error:", error);
+        setMessage({
+          type: "error",
+          text:
+            error.response?.data?.message ||
+            error.response?.data?.massage ||
+            "Failed to load profile data",
+        });
       } finally {
         setLoading(false);
       }
@@ -89,19 +111,19 @@ function Settings() {
         <div>
           <label className="text-sm text-gray-500">Username</label>
           <p className="p-2 px-4 rounded bg-gray-100 font-semibold text-gray-800">
-            {profileData.username}
+            {profileData?.username}
           </p>
         </div>
         <div>
           <label className="text-sm text-gray-500">Email</label>
           <p className="p-2 px-4 rounded bg-gray-100 font-semibold text-gray-800">
-            {profileData.email}
+            {profileData?.email}
           </p>
         </div>
         <div>
           <label className="text-sm text-gray-500">Current Address</label>
           <p className="p-2 px-4 rounded bg-gray-100 font-semibold text-gray-800">
-            {profileData.address}
+            {profileData?.address}
           </p>
         </div>
       </div>

@@ -23,6 +23,7 @@ import Settings from './component/profile/Settings.jsx';
 import AllOrders from './component/profile/AllOrders.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import VerifyEmailPage from './component/VerifyEmailPage.jsx';
 
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
           <Route  path="/reviews/:id/edit"  element={<UpdateReview />} />       
           <Route  path="/login"  element={<LogIn />} />       
           <Route  path="/signup"  element={<SignUp />} />       
+          <Route  path="/verifyemail"  element={<VerifyEmailPage />} />       
           <Route  path="/admin profile"  element={<Profile />} >
           <Route index element={<AllOrders />} />
           <Route  path="/admin profile/addbooks"  element={<AddBook />} />

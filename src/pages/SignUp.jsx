@@ -22,6 +22,11 @@ const SignUpPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,13 +34,15 @@ const SignUpPage = () => {
     if (!formData.username || !formData.email || !formData.password || !formData.address) {
       return toast.info("All fields are required");
     }
+    if (!validateEmail(formData.email)) {
+      return toast.error("Invalid email format");
+    }
 
     try {
       setLoading(true);
       await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/sign-up`, formData);
-
       toast.success("Sign Up Successful 🎉");
-      navigate("/login");
+      navigate("/verifyemail");
     } catch (error) {
       toast.error(error.response?.data?.massage || "Sign up failed. Try again.");
     } finally {
@@ -122,11 +129,10 @@ const SignUpPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold text-white transition ${
-              loading
+            className={`w-full py-3 rounded-lg font-semibold text-white transition ${loading
                 ? "bg-indigo-400 cursor-not-allowed"
                 : "bg-indigo-600 hover:bg-indigo-700 shadow-md"
-            }`}
+              }`}
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
