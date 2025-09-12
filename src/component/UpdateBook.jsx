@@ -18,7 +18,7 @@ const UpdateBook = ({onClose}) => {
 
   const headers = {
     id: localStorage.getItem("id"),
-    authorization: `Baerer ${localStorage.getItem("token")}`,
+    authorization: `Bearer ${localStorage.getItem("token")}`,
     bookid: id
   }
   // Fetch the current book details when the component loads
@@ -36,7 +36,7 @@ const UpdateBook = ({onClose}) => {
       });
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching book details:', massage.error);
+      console.error('Error fetching book details:', message.error);
       toast.error('Failed to load book data.');
       setLoading(false);
     }

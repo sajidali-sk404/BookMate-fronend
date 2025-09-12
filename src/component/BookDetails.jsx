@@ -32,6 +32,7 @@ const BookDetails = () => {
         bookid: id,
     };
 
+
     const fetchBookDetails = async () => {
         try {
             const response = await axios.get(
@@ -102,17 +103,25 @@ const BookDetails = () => {
             { headers }
         );
         setIsFavouriteClicked(true);
-        toast.success(response.data.massage);
+        toast.success(response.data.message);
     };
 
-    const handleCart = async () => {
-        const response = await axios.put(
-            `${import.meta.env.VITE_BACKEND_URI}/api/addbook-to-cart`,
-            {},
-            { headers }
-        );
-        toast.success(response.data.massage);
-    };
+   const handleCart = async () => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URI}/api/addbook-to-cart`,
+      {},
+      { headers }
+    );
+
+    toast.success(response.data.message); // ✅ fixed typo (message → message)
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to add book to cart"
+    );
+    console.error("add-to-cart error:", error);
+  }
+};
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">

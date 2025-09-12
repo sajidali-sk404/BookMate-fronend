@@ -23,7 +23,7 @@ function SidebarProfile({ data }) {
         ? "bg-blue-600 text-white font-semibold shadow"
         : "text-gray-200 hover:bg-gray-500 hover:text-white"
     }`;
-
+    
   return (
     <aside className="bg-gray-800 text-white w-full md:w-50 max-md:w-64 min-h-screen flex flex-col justify-between p-6 sticky top-20 li">
       {/* Profile Section */}

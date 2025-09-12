@@ -1,4 +1,3 @@
-import React from "react";
 import { RxCross1 } from "react-icons/rx";
 
 function SeeUserData({ UserDivData, UserDiv, setUserDiv }) {

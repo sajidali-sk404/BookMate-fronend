@@ -14,7 +14,7 @@ function Cart() {
 
   const headers = {
     id: localStorage.getItem("id"),
-    authorization: `Baerer ${localStorage.getItem("token")}`
+    authorization: `Bearer ${localStorage.getItem("token")}`
   }
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function Cart() {
   const deleteHandle = async (bookid) => {
     try {
       const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-cart/${bookid}`, {}, { headers });
-      toast.success(response.data.massage);
+      toast.success(response.data.message);
       
 
     } catch (error) {
@@ -53,7 +53,8 @@ function Cart() {
   const placeOder = async () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/place-order`, { order: Cart }, { headers });
-      toast.success(response.data.massage)
+      toast.success(response.data.message)
+      console.log(response.data )
       navigate('/profile/orderhistory')
     } catch (error) {
       console.log(error)

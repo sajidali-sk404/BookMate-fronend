@@ -9,7 +9,8 @@ function Settings() {
   const [message, setMessage] = useState(null);
 
   const headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
   // ✅ Corrected handleChange
@@ -19,38 +20,35 @@ function Settings() {
   };
 
   // ✅ Submit updated address
-  const handleSubmit = async () => {
-    try {
-      setUpdating(true);
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URI}/api/update-address`,
-        { address: value.address },
-        { headers }
-      );
+ const handleSubmit = async () => {
+  try {
+    setUpdating(true);
+    const response = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URI}/api/update-address`,
+      { address: value.address },
+      { headers }
+    );
 
-      const msg =
-        response.data?.message || response.data?.massage || "Address updated";
+    setMessage({
+      type: "success",
+      text: response.data?.message || "Address updated",
+    });
 
-      setMessage({ type: "success", text: msg });
-
-      // update UI with fresh data if backend returns user
-      if (response.data?.user) {
-        setProfileData(response.data.user);
-        setValue({ address: response.data.user.address || "" });
-      }
-    } catch (error) {
-      console.error("update-address error:", error);
-      setMessage({
-        type: "error",
-        text:
-          error.response?.data?.message ||
-          error.response?.data?.massage ||
-          "Failed to update address",
-      });
-    } finally {
-      setUpdating(false);
+    if (response.data?.user) {
+      setProfileData(response.data.user);
+      setValue({ address: response.data.user.address || "" });
     }
-  };
+  } catch (error) {
+    console.error("update-address error:", error);
+    setMessage({
+      type: "error",
+      text: error.response?.data?.message || "Failed to update address",
+    });
+  } finally {
+    setUpdating(false);
+  }
+};
+
 
   // ✅ Fetch profile info
   useEffect(() => {
@@ -60,7 +58,8 @@ function Settings() {
           `${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,
           { headers }
         );
-        const user = response.data?.user ?? response.data;
+        const user = response.data;
+        console.log(user);
         setProfileData(user);
         setValue({ address: user?.address || "" });
       } catch (error) {
@@ -69,7 +68,7 @@ function Settings() {
           type: "error",
           text:
             error.response?.data?.message ||
-            error.response?.data?.massage ||
+            error.response?.data?.message ||
             "Failed to load profile data",
         });
       } finally {

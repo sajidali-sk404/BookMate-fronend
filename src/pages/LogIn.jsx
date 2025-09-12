@@ -33,11 +33,11 @@ const LoginPage = () => {
         `${import.meta.env.VITE_BACKEND_URI}/api/sign-in`,
         formData
       );
-
       // Store auth details
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
+
 
       dispatch(authActions.Login());
       dispatch(authActions.changeRole(response.data.role));
@@ -45,7 +45,7 @@ const LoginPage = () => {
       toast.success("Login successful 🎉");
       navigate("/");
     } catch (error) {
-      toast.error(error.response?.data?.massage || "Login failed. Try again.");
+      toast.error(error.response?.data?.message || "Login failed. Try again.");
     } finally {
       setLoading(false);
     }

@@ -33,17 +33,18 @@ function UserOrderHistory() {
   }, []);
 
   // 🛠 Helper: status badge
-  const getStatusBadge = (status) => {
+    const getStatusBadge = (status) => {
     const colors = {
-      "Order Placed": "bg-yellow-100 text-yellow-700",
+      "Order placed": "bg-yellow-100 text-yellow-700",
       Canceled: "bg-red-100 text-red-700",
       Delivered: "bg-green-100 text-green-700",
+      "Out for delivery" : "text-orange-600 bg-orange-100"
     };
+
     return (
       <span
-        className={`px-2 py-1 rounded text-sm font-medium ${
-          colors[status] || "bg-gray-100 text-gray-700"
-        }`}
+        className={`px-2 py-1 rounded text-sm font-medium ${colors[status] || "bg-gray-100 text-gray-700"
+          }`}
       >
         {status}
       </span>
@@ -87,54 +88,50 @@ function UserOrderHistory() {
       </div>
 
       <div className="space-y-3 mt-4">
-        {orderHistory.map((item, i) => {
-          const book = item.book; // safer ref
-          return (
-            <div
-              key={item._id || i}
-              className="flex flex-col md:flex-row bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md transition"
-            >
-              {/* Sr */}
-              <div className="md:w-[5%] flex items-center justify-center font-medium text-gray-600">
-                {i + 1}
-              </div>
-
-              {/* Book */}
-              <div className="md:w-[25%] mb-2 md:mb-0">
-                {book ? (
-                  <Link
-                    to={`/books/${book?._id}`}
-                    className="text-blue-600 hover:underline font-medium"
-                  >
-                    {book?.title}
-                  </Link>
-                ) : (
-                  <span className="text-red-500 italic">
-                    Book no longer available
-                  </span>
-                )}
-              </div>
-
-              {/* Description */}
-              <div className="md:w-[40%] text-gray-600 text-sm">
-                {book?.desc ? `${book.desc.slice(0, 60)}...` : "N/A"}
-              </div>
-
-              {/* Price */}
-              <div className="md:w-[10%] font-semibold text-gray-800">
-                {book?.price ? `$${book.price}` : "-"}
-              </div>
-
-              {/* Status */}
-              <div className="md:w-[15%]">{getStatusBadge(item.status)}</div>
-
-              {/* Mode */}
-              <div className="hidden md:block md:w-[5%] text-sm text-gray-500">
-                COD
-              </div>
+        {orderHistory.map((item, i) => (
+          <div
+            key={item._id || i}
+            className="flex flex-col bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md transition space-y-4"
+          >
+            <div className="flex justify-between items-center border-b pb-2 mb-2">
+              {/* Order number + status */}
+              <div className="font-medium text-gray-600">Order #{i + 1}</div>
+              <div>{getStatusBadge(item.status)}</div>
             </div>
-          );
-        })}
+
+            {/* Books in this order */}
+            {item.books?.length ? (
+              item.books.map((book, idx) => (
+                <div
+                  key={book._id || idx}
+                  className="flex flex-col md:flex-row items-start md:items-center border-b last:border-0 py-2"
+                >
+                  {/* Book Title */}
+                  <div className="md:w-[25%] font-semibold text-blue-600">
+                    <Link to={`/books/${book._id}`} className="hover:underline">
+                      {book.title}
+                    </Link>
+                  </div>
+
+                  {/* Description */}
+                  <div className="md:w-[45%] text-sm text-gray-600">
+                    {book.desc ? `${book.desc.slice(0, 60)}...` : "N/A"}
+                  </div>
+
+                  {/* Price */}
+                  <div className="md:w-[15%] font-semibold text-gray-800">
+                    {book.price ? `$${book.price}` : "-"}
+                  </div>
+
+                  {/* Mode */}
+                  <div className="md:w-[15%] text-sm text-gray-500">COD</div>
+                </div>
+              ))
+            ) : (
+              <span className="text-red-500 italic">No books in this order</span>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

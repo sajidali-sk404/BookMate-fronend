@@ -44,7 +44,7 @@ const SignUpPage = () => {
       toast.success("Sign Up Successful 🎉");
       navigate("/verifyemail");
     } catch (error) {
-      toast.error(error.response?.data?.massage || "Sign up failed. Try again.");
+      toast.error(error.response?.data?.message || "Sign up failed. Try again.");
     } finally {
       setLoading(false);
     }

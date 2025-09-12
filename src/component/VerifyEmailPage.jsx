@@ -62,7 +62,7 @@ export default function VerifyEmailPage({ autoSubmit = false }) {
       // give toast a moment to display
       setTimeout(() => navigate("/login"), 400);
     } catch (err) {
-      const serverMsg = err?.response?.data?.message ?? err?.response?.data?.massage;
+      const serverMsg = err?.response?.data?.message ?? err?.response?.data?.message;
       toast.error(serverMsg || err.message || "Verification failed");
       console.error("verify error:", err);
     } finally {

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 function AddBook() {
     const headers = {
         id: localStorage.getItem("id"),
-        authorization: `Baerer ${localStorage.getItem("token")}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
         role: "admin"
     }
     const [formData, setFormData] = useState({

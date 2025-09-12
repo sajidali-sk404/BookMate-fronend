@@ -54,6 +54,14 @@ const Navbar = () => {
             Books
           </Link>
 
+
+          <Link
+            to="/about"
+            className={navLinkClasses("/about")}
+            onClick={() => setActiveMenu("/about")}
+          >
+            About
+          </Link>
           {isLoggedIn && (
             <>
               {role === "user" && (
@@ -65,36 +73,28 @@ const Navbar = () => {
                   Cart
                 </Link>
               )}
-              <Link
-                to="/about"
-                className={navLinkClasses("/about")}
-                onClick={() => setActiveMenu("/about")}
-              >
-                About
-              </Link>
 
               {role === "user" && (
                 <Link
                   to="/profile"
-                  className={`${
-                    activeMenu === "/profile"
+                  className={`${activeMenu === "/profile"
                       ? "bg-green-600"
                       : "bg-green-500 hover:bg-green-600"
-                  } text-white px-4 py-2 rounded-md font-medium transition`}
+                    } text-white px-4 py-2 rounded-md font-medium transition`}
                   onClick={() => setActiveMenu("/profile")}
                 >
                   Profile
                 </Link>
               )}
 
+
               {role === "admin" && (
                 <Link
                   to="/admin profile"
-                  className={`${
-                    activeMenu === "/profile"
+                  className={`${activeMenu === "/profile"
                       ? "bg-green-600"
                       : "bg-green-500 hover:bg-green-600"
-                  } text-white px-4 py-2 rounded-md font-medium transition`}
+                    } text-white px-4 py-2 rounded-md font-medium transition`}
                   onClick={() => setActiveMenu("/profile")}
                 >
                   Admin Profile
@@ -107,22 +107,20 @@ const Navbar = () => {
             <div className="flex gap-4">
               <Link
                 to="/login"
-                className={`${
-                  activeMenu === "/login"
+                className={`${activeMenu === "/login"
                     ? "bg-blue-600 text-white"
                     : "text-white border border-blue-500 hover:bg-blue-600 hover:text-white"
-                } px-4 py-2 rounded-md font-medium transition`}
+                  } px-4 py-2 rounded-md font-medium transition`}
                 onClick={() => setActiveMenu("/login")}
               >
                 Log In
               </Link>
               <Link
                 to="/signup"
-                className={`${
-                  activeMenu === "/signup"
+                className={`${activeMenu === "/signup"
                     ? "bg-blue-600 text-white"
                     : "text-white border border-blue-500 hover:bg-blue-600 hover:text-white"
-                } px-4 py-2 rounded-md font-medium transition`}
+                  } px-4 py-2 rounded-md font-medium transition`}
                 onClick={() => setActiveMenu("/signup")}
               >
                 Sign Up
@@ -134,9 +132,8 @@ const Navbar = () => {
 
       {/* Sidebar (Mobile) */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden shadow-lg`}
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out md:hidden shadow-lg`}
       >
         <div className="p-6 space-y-6">
           <Link

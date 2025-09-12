@@ -8,26 +8,47 @@ import MobileNav from '../component/profile/MobileNav';
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
-   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.token);
-  const headers ={
-    id:localStorage.getItem("id"),
-    authorization: `Baerer ${localStorage.getItem("token")}`
-  }
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
 
   useEffect(() => {
-   const fetch = async () => {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,{headers});
-   setUserData(response.data)
-   setLoading(false);
-   };
-   fetch();
+    const fetch = async () => {
+      try {
+        if (!headers.id || !headers.authorization || headers.authorization === "Bearer null") {
+          navigate("/login");
+          return;
+        }
+
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,
+          { headers }
+        );
+        // since backend returns { user: {...} }
+        setUserData(response.data);
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+        if (err.response?.status === 403) {
+          navigate("/login"); // token invalid/expired
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetch();
   }, []);
 
- 
-    if (loading) {
+
+
+
+
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen text-gray-600">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
@@ -37,7 +58,7 @@ const UserProfile = () => {
 
   return (
     <div className="flex flex-col md:flex-row py-8 md:px-12 px-2 ">
- <div className="hidden md:block md:w-1/4 lg:w-1/5 h-full sticky top-8">
+      <div className="hidden md:block md:w-1/4 lg:w-1/5 h-full sticky top-8">
         <SidebarProfile data={userData} />
       </div>
 
