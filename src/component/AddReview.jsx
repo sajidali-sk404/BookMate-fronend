@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 
 const AddReview = ({ bookId, onReviewAdded, onClose }) => {
   const [formData, setFormData] = useState({
-    reviewerName: '',
     rating: 1,
     comment: '',
   });
@@ -28,15 +27,28 @@ const AddReview = ({ bookId, onReviewAdded, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const headers = {
+        id: localStorage.getItem("userId"),   // ✅ user id from storage
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // if you use JWT
+      };
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/api/books/${bookId}/reviews`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
-      onReviewAdded(response.data); // update BookDetails reviews
+
+      onReviewAdded(response.data.review);
+      console.log(response);
+      console.log(response.data);
       toast.success('🎉 Review added successfully!');
-      setFormData({ reviewerName: '', rating: 1, comment: '' });
-      onClose(); // close form after submit
+      setFormData({ rating: 1, comment: '' });
+      onClose();
     } catch (error) {
       console.error('Error adding review:', error);
       toast.error('❌ Failed to add review. Please try again.');
@@ -47,19 +59,6 @@ const AddReview = ({ bookId, onReviewAdded, onClose }) => {
     <div className="max-w-md mx-auto bg-white p-8 my-5 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6">Add a Review</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="reviewerName" className="block text-gray-700">Reviewer Name:</label>
-          <input
-            type="text"
-            id="reviewerName"
-            name="reviewerName"
-            value={formData.reviewerName}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-
         <div className="mb-4">
           <label className="block text-gray-700">Rating:</label>
           <ReactStars

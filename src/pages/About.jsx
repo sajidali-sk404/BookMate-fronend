@@ -1,7 +1,10 @@
-import React from 'react';
+import { useSelector } from "react-redux";
 import { FaBookReader, FaUsers, FaStar, FaRocket } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 function About() {
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   return (
     <div className="my-16 mx-6 md:mx-20 lg:mx-40">
       {/* Heading Section */}
@@ -70,9 +73,13 @@ function About() {
           Whether you're seeking motivation, relaxation, or an escape into new worlds, BookMate is here to guide your journey.  
           Dive into your next great read today!
         </p>
-        <button className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition">
+        {!isLoggedIn && (
+        <button
+         onClick={() => navigate("/signup")}
+         className="bg-white text-blue-600 cursor-pointer font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition">
           Join BookMate Now
         </button>
+        )}
       </div>
     </div>
   );

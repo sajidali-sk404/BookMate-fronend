@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import UpdateBook from "./UpdateBook";
 import UpdateReview from "./UpdateReview";
+import { User } from "lucide-react";
 
 const BookDetails = () => {
     const { id } = useParams();
@@ -31,6 +32,10 @@ const BookDetails = () => {
         authorization: `Bearer ${localStorage.getItem("token")}`,
         bookid: id,
     };
+    const currentUserId = localStorage.getItem("id");
+    const handleEdit = (review) => {
+        setEditingReviewId(review._id);
+    };
 
 
     const fetchBookDetails = async () => {
@@ -49,6 +54,7 @@ const BookDetails = () => {
             const response = await axios.get(
                 `${import.meta.env.VITE_BACKEND_URI}/api/books/${id}/reviews`
             );
+
             setReviews(response.data);
         } catch (error) {
             console.error("Error fetching reviews:", error);
@@ -106,22 +112,22 @@ const BookDetails = () => {
         toast.success(response.data.message);
     };
 
-   const handleCart = async () => {
-  try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_BACKEND_URI}/api/addbook-to-cart`,
-      {},
-      { headers }
-    );
+    const handleCart = async () => {
+        try {
+            const response = await axios.put(
+                `${import.meta.env.VITE_BACKEND_URI}/api/addbook-to-cart`,
+                {},
+                { headers }
+            );
 
-    toast.success(response.data.message); // ✅ fixed typo (message → message)
-  } catch (error) {
-    toast.error(
-      error.response?.data?.message || "Failed to add book to cart"
-    );
-    console.error("add-to-cart error:", error);
-  }
-};
+            toast.success(response.data.message); // ✅ fixed typo (message → message)
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Failed to add book to cart"
+            );
+            console.error("add-to-cart error:", error);
+        }
+    };
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">
@@ -165,8 +171,8 @@ const BookDetails = () => {
                                 <button
                                     onClick={handleFavourite}
                                     className={`flex items-center gap-2 py-2 px-4 rounded-lg w-full justify-center ${isFavouriteClicked
-                                            ? "bg-red-500 text-white"
-                                            : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                                        ? "bg-red-500 text-white"
+                                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                                         }`}
                                 >
                                     <FaRegHeart /> Favourite
@@ -205,15 +211,19 @@ const BookDetails = () => {
             {/* Reviews Section */}
             <div className="mt-12">
                 <h2 className="text-2xl md:text-3xl font-bold mb-6">Customer Reviews</h2>
+
                 {reviews.length > 0 ? (
                     reviews.map((review) => (
                         <div
                             key={review._id}
                             className="mb-6 p-5 bg-gray-50 rounded-lg shadow-sm border"
                         >
+                            {/* Reviewer name */}
                             <p className="text-gray-800 mb-2 font-semibold">
-                                {review.reviewerName}
+                                {review.user?.username || "Anonymous"}
                             </p>
+
+                            {/* Stars */}
                             <ReactStars
                                 count={5}
                                 value={review.rating}
@@ -221,8 +231,11 @@ const BookDetails = () => {
                                 edit={false}
                                 activeColor="#fbbf24"
                             />
+
+                            {/* Comment */}
                             <p className="text-gray-600 mt-2">{review.comment}</p>
 
+                            {/* Action Buttons (Edit/Delete) */}
                             <div className="flex justify-end gap-3 mt-3">
                                 {editingReviewId === review._id ? (
                                     <UpdateReview
@@ -231,18 +244,23 @@ const BookDetails = () => {
                                     />
                                 ) : (
                                     <>
-                                        <button
-                                            onClick={() => setEditingReviewId(review._id)}
-                                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
-                                        >
-                                            <FaEdit />
-                                        </button>
+                                        {/* Show Edit only if review belongs to current logged in user */}
+                                        {review.user?._id === currentUserId && (
+                                            <button
+                                                onClick={() => handleEdit(review)}
+                                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded flex items-center gap-1"
+                                            >
+                                                <FaEdit /> Edit
+                                            </button>
+                                        )}
+
+                                        {/* Show Delete only if user is admin */}
                                         {isLoggedIn && role === "admin" && (
                                             <button
-                                                onClick={() => handleDeleteBook(review._id)}
-                                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                                                onClick={() => handleDeleteReview(review._id)}
+                                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded flex items-center gap-1"
                                             >
-                                                <MdDelete />
+                                                <MdDelete /> Delete
                                             </button>
                                         )}
                                     </>
@@ -254,6 +272,7 @@ const BookDetails = () => {
                     <p className="text-gray-500">No reviews yet. Be the first to review!</p>
                 )}
             </div>
+
 
             {/* Add Review */}
             {isLoggedIn && (
