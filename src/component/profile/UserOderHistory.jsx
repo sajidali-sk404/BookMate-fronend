@@ -83,8 +83,8 @@ function UserOrderHistory() {
         <div className="w-[25%]">Book</div>
         <div className="w-[40%]">Description</div>
         <div className="w-[10%]">Price</div>
-        <div className="w-[15%]">Status</div>
-        <div className="w-[5%]">Mode</div>
+        <div className="w-[12%]">Mode</div>
+        <div className="w-[                                                                                                                                   5%]">Status</div>             
       </div>
 
       <div className="space-y-3 mt-4">

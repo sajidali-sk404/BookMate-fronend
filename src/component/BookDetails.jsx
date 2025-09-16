@@ -21,6 +21,7 @@ const BookDetails = () => {
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showEditBook, setShowEditBook] = useState(false);
     const [editingReviewId, setEditingReviewId] = useState(null);
+    
 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const role = useSelector((state) => state.auth.role);
@@ -91,16 +92,40 @@ const BookDetails = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/deletebook`, {
+                 await axios.delete(`${import.meta.env.VITE_BACKEND_URI}/api/deletebook`, {
                     headers,
-                });
-                toast.success("Book deleted successfully!");
-                navigate("/books");
+            });
             } catch (error) {
                 toast.error("❌ Failed to delete the book. Please try again.");
             }
         }
     };
+
+const handleDeleteReview = async (reviewId, bookId) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "You will not be able to recover this review!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URI}/api/reviews/${reviewId}`
+      );
+
+      toast.success("✅ Review deleted successfully!");
+      navigate(`/books/${bookId}`);
+    } catch (error) {
+      toast.error("❌ Failed to delete the review. Please try again.");
+    }
+  }
+};
+
 
     const handleFavourite = async () => {
         const response = await axios.put(
@@ -128,6 +153,7 @@ const BookDetails = () => {
             console.error("add-to-cart error:", error);
         }
     };
+    
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">
@@ -245,7 +271,7 @@ const BookDetails = () => {
                                 ) : (
                                     <>
                                         {/* Show Edit only if review belongs to current logged in user */}
-                                        {review.user?._id === currentUserId && (
+                                        {review.user?._id === currentUserId || role === "admin" && (
                                             <button
                                                 onClick={() => handleEdit(review)}
                                                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded flex items-center gap-1"
@@ -257,7 +283,7 @@ const BookDetails = () => {
                                         {/* Show Delete only if user is admin */}
                                         {isLoggedIn && role === "admin" && (
                                             <button
-                                                onClick={() => handleDeleteReview(review._id)}
+                                                onClick={() => handleDeleteReview(review._id, review.bookId)}
                                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded flex items-center gap-1"
                                             >
                                                 <MdDelete /> Delete

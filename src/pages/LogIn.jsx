@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authActions } from "../store/auth";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState(""); // <-- success / error message
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return toast.info("All fields are required");
+      return setMessage("⚠️ All fields are required");
     }
 
     try {
@@ -33,19 +34,21 @@ const LoginPage = () => {
         `${import.meta.env.VITE_BACKEND_URI}/api/sign-in`,
         formData
       );
+
       // Store auth details
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
 
-
       dispatch(authActions.Login());
       dispatch(authActions.changeRole(response.data.role));
 
-      toast.success("Login successful 🎉");
-      navigate("/");
+      setMessage("✅ Login successful 🎉");
+      setTimeout(() => {
+        navigate("/");
+      }, 1500); // small delay so user sees the message
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed. Try again.");
+      setMessage(error.response?.data?.message || "❌ Login failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -54,6 +57,26 @@ const LoginPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
       <div className="max-w-md w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-200">
+
+        {/* ✅ Animated Banner */}
+        <AnimatePresence>
+          {message && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className={`mb-4 p-3 rounded-lg text-center font-medium shadow-md ${
+                message.includes("successful")
+                  ? "bg-green-100 text-green-700 border border-green-300"
+                  : "bg-red-100 text-red-700 border border-red-300"
+              }`}
+            >
+              {message}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <h2 className="text-3xl font-bold text-center text-indigo-600 mb-6">
           Welcome Back
         </h2>
