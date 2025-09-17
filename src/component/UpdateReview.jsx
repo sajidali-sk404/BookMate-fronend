@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 export default function UpdateReview({ reviewId ,onClose }) {
   const [formData, setFormData] = useState({
-    reviewerName: '',
     rating: 1,
     comment: '',
   });
@@ -18,7 +17,6 @@ export default function UpdateReview({ reviewId ,onClose }) {
     try {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/reviews/${reviewId}`);
       setFormData({
-        reviewerName: response.data.reviewerName,
         rating: response.data.rating,
         comment: response.data.comment,
       });
@@ -78,20 +76,6 @@ useEffect(() => {
       <div className="max-w-1xl mx-auto bg-gray-50 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6">Update Review</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="reviewerName" className="block text-gray-700">Reviewer:</label>
-            <input
-              type="text"
-              id="reviewerName"
-              name="reviewerName"
-              value={formData.reviewerName}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-  
-          </div>
-
           <div className="mb-4">
             <label htmlFor="rating" className="block text-gray-700">Rating:</label>
             <ReactStars

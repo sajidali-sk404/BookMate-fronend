@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { AiFillDelete } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

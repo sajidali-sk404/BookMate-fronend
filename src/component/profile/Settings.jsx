@@ -58,8 +58,7 @@ function Settings() {
           `${import.meta.env.VITE_BACKEND_URI}/api/get-user-information`,
           { headers }
         );
-        const user = response.data;
-        console.log(user);
+        const user = response.data;    
         setProfileData(user);
         setValue({ address: user?.address || "" });
       } catch (error) {

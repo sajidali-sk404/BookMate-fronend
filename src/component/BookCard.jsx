@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -14,6 +14,7 @@ function BookCard({ data, favourite }) {
     bookid: data._id,
   };
 
+
   const handleRemoveBookFromFavourites = async () => {
     try {
       const response = await axios.put(
@@ -26,6 +27,7 @@ function BookCard({ data, favourite }) {
       toast.error("Failed to remove from favourites");
     }
   };
+ 
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">

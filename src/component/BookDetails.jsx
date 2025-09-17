@@ -271,7 +271,7 @@ const handleDeleteReview = async (reviewId, bookId) => {
                                 ) : (
                                     <>
                                         {/* Show Edit only if review belongs to current logged in user */}
-                                        {review.user?._id === currentUserId || role === "admin" && (
+                                        {review.user?._id === currentUserId && (
                                             <button
                                                 onClick={() => handleEdit(review)}
                                                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded flex items-center gap-1"
