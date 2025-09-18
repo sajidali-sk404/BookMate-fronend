@@ -42,6 +42,7 @@ const SignUpPage = () => {
       setLoading(true);
       await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/sign-up`, formData);
       toast.success("Sign Up Successful 🎉");
+      localStorage.setItem("pendingEmail", formData.email);
       navigate("/verifyemail");
     } catch (error) {
       toast.error(error.response?.data?.message || "Sign up failed. Try again.");

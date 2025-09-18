@@ -53,7 +53,9 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
+  if(message === "Please verify your email before login."){
+    onclick(navigate("/verifyemail"));
+  }
   return (
     <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
       <div className="max-w-md w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-200">
@@ -69,7 +71,7 @@ const LoginPage = () => {
               className={`mb-4 p-3 rounded-lg text-center font-medium shadow-md ${
                 message.includes("successful")
                   ? "bg-green-100 text-green-700 border border-green-300"
-                  : "bg-red-100 text-red-700 border border-red-300"
+                  : `bg-red-100 text-red-700 border border-red-300`
               }`}
             >
               {message}

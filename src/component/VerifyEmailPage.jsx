@@ -24,12 +24,19 @@ export default function VerifyEmailPage({ autoSubmit = false }) {
     const qCode = params.get("code") ?? "";   // code param if using 6-digit codes
     const qToken = params.get("token") ?? ""; // token param if using link token
 
-    if (qEmail) setEmail(decodeURIComponent(qEmail).trim().toLowerCase());
+    if (qEmail) {
+      setEmail(decodeURIComponent(qEmail).trim().toLowerCase());
+    } else {
+      const storedEmail = localStorage.getItem("pendingEmail");
+      if (storedEmail) {
+        setEmail(storedEmail.trim().toLowerCase());
+      }
+    }
     if (qCode) setCode(qCode.trim());
     if (qToken) setToken(qToken.trim());
 
     // Optionally auto-submit when link has both email + code/token
-    if (autoSubmit && ( (qEmail && (qCode || qToken)) )) {
+    if (autoSubmit && ((qEmail && (qCode || qToken)))) {
       // small delay so UI updates before auto-submit
       setTimeout(() => {
         // call verify handler below
@@ -59,6 +66,7 @@ export default function VerifyEmailPage({ autoSubmit = false }) {
     try {
       const resp = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/verify-email`, payload);
       toast.success(resp.data?.message ?? "Verified!");
+      localStorage.removeItem("pendingEmail");
       // give toast a moment to display
       setTimeout(() => navigate("/login"), 400);
     } catch (err) {
@@ -133,16 +141,15 @@ export default function VerifyEmailPage({ autoSubmit = false }) {
         <h2 className="text-2xl font-bold text-center mb-4">Verify Email</h2>
 
         <form id="verify-form" onSubmit={handleVerify} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-3 w-full border rounded-lg"
-            required
-            autoComplete="email"
-          />
+          <div className="my-5">
+            <input
+              type="email"
+              value={email}
+              readOnly
+              className="p-3 w-full text-center text-2xl rounded-lg text-gray-800 cursor-not-allowed"
+            />
 
+          </div>
           {/* show either code input or token input depending on your flow */}
           {!token && (
             <div className="relative">
