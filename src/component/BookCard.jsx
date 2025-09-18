@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function BookCard({ data, favourite }) {
+function BookCard({ data, favourite , onRemoved}) {
   const truncateText = (text, maxLength) => {
     return text?.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
@@ -23,6 +23,7 @@ function BookCard({ data, favourite }) {
         { headers }
       );
       toast.success(response.data.message || "Removed from favourites!");
+       if (onRemoved) onRemoved(data._id); // 👈 remove from UI immediately
     } catch (error) {
       toast.error("Failed to remove from favourites");
     }

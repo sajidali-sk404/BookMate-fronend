@@ -30,6 +30,9 @@ function Favourites() {
     fetchFavourites();
   }, []); // ✅ run only once
 
+const handleRemoveFromUI = (bookId) => {
+  setFavouriteBooks((prev) => prev.filter((book) => book._id !== bookId));
+};
   return (
     <div className="m-5">
       {/* Loading state */}
@@ -57,12 +60,13 @@ function Favourites() {
       {!loading && favouriteBooks.length > 0 && (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {favouriteBooks.map((book) => (
-            <BookCard key={book._id} data={book} favourite={true} />
+            <BookCard key={book._id} data={book} favourite={true} onRemoved={handleRemoveFromUI} />
           ))}
         </div>
       )}
     </div>
   );
 }
+
 
 export default Favourites;
