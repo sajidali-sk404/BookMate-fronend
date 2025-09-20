@@ -29,13 +29,10 @@ function Cart() {
   const deleteHandle = async (bookid) => {
     try {
       const response = await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/removebook-from-cart/${bookid}`, {}, { headers });
-      toast.success(response.data.message);
-      
-
+      toast.info(response.data.message);
     } catch (error) {
       toast.error("Error removing book:", error.response ? error.response.data : error.message);
     }
-
   }
   
 
@@ -54,7 +51,6 @@ function Cart() {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/api/place-order`, { order: Cart }, { headers });
       toast.success(response.data.message)
-      console.log(response.data )
       navigate('/profile/orderhistory')
     } catch (error) {
       console.log(error)

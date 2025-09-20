@@ -22,7 +22,7 @@ function BookCard({ data, favourite , onRemoved}) {
         {},
         { headers }
       );
-      toast.success(response.data.message || "Removed from favourites!");
+      toast.info(response.data.message || "Removed from favourites!");
        if (onRemoved) onRemoved(data._id); // 👈 remove from UI immediately
     } catch (error) {
       toast.error("Failed to remove from favourites");

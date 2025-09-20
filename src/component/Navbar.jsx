@@ -54,7 +54,6 @@ const Navbar = () => {
             Books
           </Link>
 
-
           <Link
             to="/about"
             className={navLinkClasses("/about")}
@@ -135,7 +134,7 @@ const Navbar = () => {
         className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:hidden shadow-lg`}
       >
-        <div className="p-6 space-y-6">
+        <div className="p-6 flex flex-col space-y-6">
           <Link
             to="/"
             className={navLinkClasses("/")}

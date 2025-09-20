@@ -43,7 +43,7 @@ const LoginPage = () => {
       dispatch(authActions.Login());
       dispatch(authActions.changeRole(response.data.role));
 
-      setMessage("✅ Login successful 🎉");
+      setMessage("✅ Login successful... 🎉");
       setTimeout(() => {
         navigate("/");
       }, 1500); // small delay so user sees the message
