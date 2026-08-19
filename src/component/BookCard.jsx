@@ -38,6 +38,7 @@ function BookCard({ data, favourite , onRemoved}) {
           className="h-full object-contain p-3"
           src={data.url}
           alt={`Cover of ${data.title}`}
+          loading="lazy"
         />
       </div>
 
@@ -77,4 +78,4 @@ function BookCard({ data, favourite , onRemoved}) {
   );
 }
 
-export default BookCard;
+export default React.memo(BookCard);

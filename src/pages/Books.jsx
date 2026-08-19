@@ -24,7 +24,6 @@ export default function Books() {
       const newBooks = response.data.books || [];
 
       setBooks((prevBooks) => {
-        // ✅ Deduplicate using IDs instead of Set with objects
         const uniqueMap = new Map();
         [...prevBooks, ...newBooks].forEach((book) =>
           uniqueMap.set(book._id, book)
@@ -49,14 +48,6 @@ export default function Books() {
     if (!loading) setPage((prevPage) => prevPage + 1);
   };
 
-  if (initialLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-gray-600">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
-      </div>
-    );
-  }
-
   return (
     <>
       <FictionBook />
@@ -65,7 +56,18 @@ export default function Books() {
         All Books
       </h1>
 
-      {books.length === 0 ? (
+      {initialLoading ? (
+        <div className="grid grid-cols-1 mb-10 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 bg-gray-100">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+            <div key={n} className="bg-white rounded-2xl p-4 shadow-md animate-pulse">
+              <div className="bg-gray-200 h-[280px] rounded-xl mb-4"></div>
+              <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+      ) : books.length === 0 ? (
         <div className="flex justify-center items-center py-20 text-gray-500 text-lg">
           No books available at the moment.
         </div>
@@ -78,7 +80,7 @@ export default function Books() {
       )}
 
       <div className="text-center mb-10">
-        {hasMore && (
+        {hasMore && !initialLoading && (
           <button
             onClick={handleSeeMore}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"

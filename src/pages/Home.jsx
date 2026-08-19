@@ -9,16 +9,15 @@ export default function Home() {
   const [randomBooks, setRandomBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch random books when the component mounts
   const fetchRandomBooks = async () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URI}/api/random-books`
       );
       setRandomBooks(response.data);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching random books:", error);
+    } finally {
       setLoading(false);
     }
   };
@@ -27,22 +26,14 @@ export default function Home() {
     fetchRandomBooks();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-gray-600">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
-      </div>
-    );
-  }
-
   return (
     <>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-gray-500 to-gary-600 text-black py-20 px-6 sm:px-16 text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-6">
+      {/* Hero Section - Always visible instantly */}
+      <section className="bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 text-white py-20 px-6 sm:px-16 text-center shadow-inner">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight">
           Discover Your Next Favorite Book 📚
         </h1>
-        <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
+        <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto text-gray-300">
           Explore books that inspire, motivate, and transport you into new worlds.
         </p>
         <div className="max-w-xl mx-auto">
@@ -55,14 +46,29 @@ export default function Home() {
         <h2 className="text-3xl sm:text-4xl font-bold mb-10 text-center text-gray-800">
           Recommended Books
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {Array.isArray(randomBooks) &&
-            randomBooks.map((book) => <BookCard key={book._id} data={book} />)}
-        </div>
+        
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="bg-white rounded-2xl p-4 shadow-md animate-pulse">
+                <div className="bg-gray-200 h-[280px] rounded-xl mb-4"></div>
+                <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.isArray(randomBooks) &&
+              randomBooks.map((book) => <BookCard key={book._id} data={book} />)}
+          </div>
+        )}
+
         <div className="text-center mt-12">
           <Link
             to="/books"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md text-lg hover:bg-blue-700 transition-all"
+            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md text-lg hover:bg-blue-700 transition-all font-medium"
           >
             View All Books
           </Link>
